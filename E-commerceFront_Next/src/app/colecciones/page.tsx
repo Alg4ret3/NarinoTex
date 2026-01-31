@@ -11,25 +11,25 @@ export default function CollectionsPage() {
   const collections = [
     { 
       title: 'Línea Corporativa', 
-      img: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800', 
+      img: 'https://images.unsplash.com/photo-1571513800374-df1bbe650e56?q=80&w=800',
       desc: 'Sastrería de alto rendimiento para el entorno empresarial moderno.',
       tag: 'Business'
     },
     { 
       title: 'Alta Costura', 
-      img: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800', 
+      img: 'https://images.unsplash.com/photo-1601762603339-fd61e28b698a?q=80&w=800', 
       desc: 'Piezas únicas que fusionan arte y técnicas textiles ancestrales.',
       tag: 'Haute Couture'
     },
     { 
       title: 'Accesorios Premium', 
-      img: 'https://images.unsplash.com/photo-1523381235212-d73f803801f7?q=80&w=800', 
+      img: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?q=80&w=800', 
       desc: 'Complementos esenciales diseñados con la máxima atención al detalle.',
       tag: 'Accessories'
     },
     { 
       title: 'Textiles Técnicos', 
-      img: 'https://images.unsplash.com/photo-1528980917911-37d45749ed4e?q=80&w=800', 
+      img: 'https://images.unsplash.com/photo-1643766883802-be314eb4d339?q=80&w=800', 
       desc: 'Innovación en fibras para deportes y exteriores.',
       tag: 'Technical'
     }

@@ -24,7 +24,7 @@ export const FullWidthVideo: React.FC<FullWidthVideoProps> = ({
 }) => {
   const allActions = actions.length > 0 ? actions : (ctaText ? [{ label: ctaText, href: '#', variant: 'primary' as const }] : []);
   return (
-    <section className="relative w-full h-[90vh] sm:h-screen overflow-hidden">
+    <section className="relative w-full h-[85dvh] sm:h-screen overflow-hidden">
       <video
         autoPlay
         loop
@@ -41,8 +41,8 @@ export const FullWidthVideo: React.FC<FullWidthVideoProps> = ({
       )}
       
       {(title || subtitle) && (
-        <div className={`relative h-full flex flex-col justify-end items-start text-left px-6 sm:px-24 pb-24 sm:pb-0 sm:justify-center z-10 ${
-          align === 'right' ? 'sm:items-end sm:text-right' : 'sm:items-start sm:text-left'
+        <div className={`relative h-full flex flex-col justify-end items-start text-left px-6 sm:px-12 md:px-16 lg:px-24 pb-20 lg:pb-0 lg:justify-center z-10 ${
+          align === 'right' ? 'lg:items-end lg:text-right' : 'lg:items-start lg:text-left'
         }`}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -51,19 +51,19 @@ export const FullWidthVideo: React.FC<FullWidthVideoProps> = ({
             viewport={{ once: true }}
             className="max-w-3xl"
           >
-              <Typography variant="h1" className="text-white mb-4 sm:mb-6 max-w-5xl mx-auto text-4xl sm:text-6xl drop-shadow-2xl">
+              <Typography variant="h1" className="text-white mb-3 sm:mb-6 max-w-5xl mx-auto text-4xl sm:text-5xl lg:text-7xl drop-shadow-2xl leading-tight">
                 {title}
               </Typography>
-              <Typography variant="body" className="text-white/80 mb-8 sm:mb-12 max-w-2xl mx-auto text-[11px] sm:text-base tracking-widest font-light uppercase">
+              <Typography variant="body" className="text-white/80 mb-8 sm:mb-12 max-w-2xl mx-auto text-[11px] sm:text-base tracking-widest font-light uppercase leading-relaxed">
                 {subtitle}
               </Typography>
             {allActions.length > 0 && (
-              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <div className="flex flex-col lg:flex-row gap-4 w-full lg:w-auto">
                 {allActions.map((action, idx) => (
                   <Button 
                     key={idx}
                     size="lg" 
-                    className={`px-10 text-[10px] tracking-[0.2em] transition-all ${
+                    className={`px-10 text-[10px] tracking-[0.2em] transition-all py-4 sm:py-3 ${
                       action.variant === 'outline' 
                         ? 'bg-transparent text-white border-white/40 hover:bg-white hover:text-black' 
                         : 'bg-white text-black border-white hover:bg-transparent hover:text-white'

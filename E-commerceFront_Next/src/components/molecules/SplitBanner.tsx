@@ -12,25 +12,25 @@ interface SplitBannerProps {
 
 export const SplitBanner: React.FC<SplitBannerProps> = ({ imageUrl, title, subtitle, description }) => {
   return (
-    <section className="relative w-full min-h-[60vh] sm:min-h-[75vh] md:min-h-screen flex flex-col md:flex-row">
+    <section className="relative w-full min-h-[60vh] sm:min-h-[75vh] lg:min-h-screen flex flex-col lg:flex-row">
       {/* Left Side - Image */}
-      <div className="relative w-full md:w-1/2 h-[40vh] sm:h-[50vh] md:h-auto overflow-hidden">
+      <div className="relative w-full lg:w-1/2 h-[40vh] sm:h-[50vh] lg:h-auto overflow-hidden">
         <img 
           src={imageUrl} 
           alt={title}
-          className="absolute inset-0 w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-[2000ms]"
+          className="absolute inset-0 w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-2000"
         />
         {/* Subtle gradient overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-br from-black/30 via-transparent to-transparent" />
       </div>
 
       {/* Right Side - Content */}
-      <div className="relative w-full md:w-1/2 bg-background flex items-center justify-center p-8 sm:p-12 md:p-16 lg:p-24">
+      <div className="relative w-full lg:w-1/2 bg-background flex items-center justify-center p-8 sm:p-12 md:p-16 lg:p-24">
         {/* Decorative border element */}
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-        <div className="absolute left-0 top-0 w-px h-full bg-gradient-to-b from-transparent via-border to-transparent md:hidden" />
-        <div className="absolute right-0 top-0 w-px h-full bg-gradient-to-b from-transparent via-border to-transparent md:hidden" />
+        <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-border to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-border to-transparent" />
+        <div className="absolute left-0 top-0 w-px h-full bg-linear-to-b from-transparent via-border to-transparent lg:hidden" />
+        <div className="absolute right-0 top-0 w-px h-full bg-linear-to-b from-transparent via-border to-transparent lg:hidden" />
         
         <div className="max-w-xl w-full space-y-8 sm:space-y-10">
           {/* Overline */}
@@ -49,7 +49,7 @@ export const SplitBanner: React.FC<SplitBannerProps> = ({ imageUrl, title, subti
           {/* Main Title */}
           <Typography 
             variant="h1" 
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight leading-[0.95] editorial-spacing"
+            className="text-4xl sm:text-5xl lg:text-7xl font-light tracking-tight leading-[0.95] editorial-spacing"
           >
             {title}
           </Typography>

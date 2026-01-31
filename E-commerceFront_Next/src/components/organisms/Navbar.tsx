@@ -14,7 +14,7 @@ import { useUser } from '@/context/UserContext';
 
 export const Navbar: React.FC = () => {
   const { totalItems, setIsCartOpen } = useCart();
-  const { user } = useUser();
+  const { user, logout } = useUser();
   const [categories, setCategories] = useState<unknown[]>([]);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -139,9 +139,55 @@ export const Navbar: React.FC = () => {
             >
               <Search size={18} strokeWidth={1.5} />
             </button>
-            <Link href={user.isLoggedIn ? "/perfil" : "/login"} className="hidden lg:flex hover:text-primary transition-colors p-1" aria-label="Cuenta">
-              <User size={18} strokeWidth={1} />
-            </Link>
+            
+            {/* User Menu - Desktop */}
+            <div 
+              className="hidden lg:block relative"
+              onMouseEnter={() => setActiveDropdown('user')}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <Link 
+                href={user?.isLoggedIn ? "/perfil" : "/login"} 
+                className="flex items-center gap-2 hover:text-primary transition-colors p-1"
+              >
+                <User size={18} strokeWidth={1} />
+                {user?.isLoggedIn && (
+                  <span className="text-[10px] tracking-[0.2em] uppercase font-medium">
+                    {user?.firstName}
+                  </span>
+                )}
+              </Link>
+              
+              <AnimatePresence>
+                {user?.isLoggedIn && activeDropdown === 'user' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 5 }}
+                    className="absolute top-full right-0 mt-2 w-48 bg-card border border-border shadow-2xl p-4"
+                  >
+                    <div className="flex flex-col gap-3">
+                      <Link
+                        href="/perfil"
+                        className="block text-[10px] tracking-widest uppercase font-medium text-neutral-400 hover:text-primary transition-colors"
+                      >
+                        Mi Perfil
+                      </Link>
+                      <button
+                        onClick={async () => {
+                          await logout();
+                          window.location.href = '/';
+                        }}
+                        className="block text-left text-[10px] tracking-widest uppercase font-medium text-neutral-400 hover:text-red-500 transition-colors"
+                      >
+                        Cerrar Sesión
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             <button 
               onClick={() => setIsCartOpen(true)}
               className="relative hover:text-primary transition-colors p-1" 
@@ -172,35 +218,31 @@ export const Navbar: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[55] bg-background/98 backdrop-blur-xl lg:hidden flex flex-col pt-24 px-8 pb-12 justify-between"
+            className="fixed inset-0 z-[55] bg-background/98 backdrop-blur-xl lg:hidden flex flex-col pt-20 px-6 sm:px-8 pb-10 justify-between overflow-y-auto max-h-dvh"
           >
             <button 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="absolute top-8 right-8 text-neutral-400 hover:text-primary transition-colors p-2"
+              className="absolute top-6 right-6 text-neutral-400 hover:text-primary transition-colors p-2"
               aria-label="Cerrar menú"
             >
               <X size={20} strokeWidth={1} />
             </button>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-6 mb-4">
-                <Typography variant="small" className="text-neutral-300">Explorar archivo</Typography>
                 <div className="flex flex-col gap-4">
                   <button 
                     onClick={() => {
                       setIsMobileMenuOpen(false);
                       setIsSearchOpen(true);
                     }}
-                    className="flex items-center justify-between w-full bg-primary/5 border border-primary/10 px-6 py-5 text-base font-sans font-light tracking-[0.2em] uppercase hover:bg-primary/10 transition-all group"
+                    className="flex items-center gap-4 text-base font-sans font-light tracking-[0.2em] uppercase hover:text-primary transition-all group py-2"
                   >
-                    <span className="flex items-center gap-4">
-                      <Search size={20} strokeWidth={1} className="text-primary" />
-                      Buscar en Archivo
-                    </span>
-                    <span className="text-[10px] text-neutral-400 group-hover:text-primary opacity-50">Lupa</span>
+                    <Search size={18} strokeWidth={1} className="text-neutral-400 group-hover:text-primary" />
+                    Buscar
                   </button>
                   <button 
                     onClick={toggleTheme}
-                    className="flex items-center gap-4 text-base font-sans font-light tracking-[0.2em] uppercase hover:text-primary transition-all group"
+                    className="flex items-center gap-4 text-base font-sans font-light tracking-[0.2em] uppercase hover:text-primary transition-all group py-2"
                   >
                     {theme === 'light' ? (
                       <>
@@ -215,12 +257,12 @@ export const Navbar: React.FC = () => {
                     )}
                   </button>
                   <Link 
-                    href={user.isLoggedIn ? "/perfil" : "/login"}
+                    href={user?.isLoggedIn ? "/perfil" : "/login"}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-4 text-base font-sans font-light tracking-[0.2em] uppercase hover:text-primary transition-all group"
+                    className="flex items-center gap-4 text-base font-sans font-light tracking-[0.2em] uppercase hover:text-primary transition-all group py-2"
                   >
                     <User size={18} strokeWidth={1} className="text-neutral-400 group-hover:text-primary" />
-                    {user.isLoggedIn ? 'Mi Perfil' : 'Ingresar'}
+                    {user?.isLoggedIn ? 'Mi Perfil' : 'Ingresar'}
                   </Link>
                 </div>
               </div>
@@ -237,12 +279,12 @@ export const Navbar: React.FC = () => {
                   <Link
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-base font-sans font-light tracking-[0.3em] uppercase hover:text-primary transition-all duration-300 py-4 flex items-center justify-between border-b border-border/30"
+                    className="text-base font-sans font-light tracking-[0.3em] uppercase hover:text-primary transition-all duration-300 py-3 sm:py-4 flex items-center justify-between border-b border-border/30"
                   >
                     {item.label}
                   </Link>
                   {item.dropdown && (
-                    <div className="flex flex-col gap-4 pl-4 pt-4 pb-2">
+                    <div className="flex flex-col gap-3 sm:gap-4 pl-4 pt-3 sm:pt-4 pb-2">
                       {item.dropdown.map((subItem) => (
                         <Link
                           key={subItem.label}
@@ -259,24 +301,24 @@ export const Navbar: React.FC = () => {
               ))}
             </div>
 
-            <div className="flex flex-col gap-8 pt-12 border-t border-border">
-              <div className="grid grid-cols-2 gap-12">
+            <div className="flex flex-col gap-8 pt-12 border-t border-border mt-8">
+              <div className="grid grid-cols-2 gap-8 sm:gap-12">
                 <div className="flex flex-col gap-4">
                   <Typography variant="small" className="text-neutral-300">Soporte</Typography>
-                  <div className="flex flex-col gap-2 text-[10px] tracking-[0.2em] uppercase font-medium text-neutral-500">
+                  <div className="flex flex-col gap-3 text-[10px] tracking-[0.2em] uppercase font-medium text-neutral-500">
                     <Link href="/nosotros#contact">Contacto</Link>
                     <Link href="/nosotros#faq">Preguntas</Link>
                   </div>
                 </div>
                 <div className="flex flex-col gap-4">
                   <Typography variant="small" className="text-neutral-300">Privado</Typography>
-                  <div className="flex flex-col gap-2 text-[10px] tracking-[0.2em] uppercase font-medium text-neutral-500">
+                  <div className="flex flex-col gap-3 text-[10px] tracking-[0.2em] uppercase font-medium text-neutral-500">
                     <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>Ingresar</Link>
                     <Link href="/cart" onClick={() => setIsMobileMenuOpen(false)}>Bolsa (0)</Link>
                   </div>
                 </div>
               </div>
-              <Typography variant="small" className="text-neutral-400/50 text-center pt-8 tracking-[0.4em]">© 2026 NariñoTex Archivo</Typography>
+              <Typography variant="small" className="text-neutral-400/50 text-center pt-4 tracking-[0.4em] pb-6">© 2026 NariñoTex Archivo</Typography>
             </div>
           </motion.div>
         )}
@@ -306,12 +348,11 @@ export const Navbar: React.FC = () => {
                 <input
                   autoFocus
                   type="text"
-                  placeholder="Explorar el Archivo NariñoTex..."
+                  placeholder="¿Qué estás buscando?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent border-none py-8 text-3xl sm:text-5xl font-serif italic tracking-tight placeholder:text-neutral-200 outline-none transition-all text-center"
+                  className="w-full bg-transparent border-b border-white/20 hover:border-white/50 focus:border-white py-6 text-2xl sm:text-4xl font-light tracking-widest placeholder:text-neutral-500 outline-none transition-all text-center uppercase"
                 />
-                <div className="w-24 h-px bg-primary/20 mx-auto mt-4" />
               </div>
 
               <div className="flex flex-col gap-8 max-h-[60vh] overflow-y-auto no-scrollbar">

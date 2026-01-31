@@ -11,7 +11,7 @@ import { Button } from "@/components/atoms/Button";
 import Link from "next/link";
 import { ArrowRight, Sparkles, Globe, ShieldCheck } from "lucide-react";
 
-import { mockProducts } from "@/data/mockProducts";
+
 
 export default function Home() {
   return (
@@ -22,7 +22,7 @@ export default function Home() {
       {/* Cinematic Entry Video */}
       <section className="relative w-full">
         <FullWidthVideo
-          videoUrl="/videos/VidBanner5.mp4"
+          videoUrl="https://istumdefdrxjir1m.public.blob.vercel-storage.com/VidBanner5.mp4"
           title="Alta Costura & Maestría"
           subtitle="Donde la tradición técnica se encuentra con la vanguardia estética."
           actions={[
@@ -41,35 +41,35 @@ export default function Home() {
 
 
       {/* Intro Hub */}
-      <section className="py-20 sm:py-32 px-6 max-w-7xl mx-auto text-center">
+      <section className="py-12 sm:py-24 md:py-32 px-4 sm:px-8 md:px-12 max-w-7xl mx-auto text-center">
         <Typography
           variant="small"
-          className="mb-4 sm:mb-6 block tracking-[0.3em] text-neutral-400 text-[10px]"
+          className="mb-4 sm:mb-6 block tracking-[0.3em] text-neutral-400 text-[9px] sm:text-[10px]"
         >
           Canales de Exploración
         </Typography>
-        <Typography variant="h2" className="mb-12 sm:mb-24 text-3xl sm:text-5xl">
+        <Typography variant="h2" className="mb-8 sm:mb-24 text-3xl sm:text-5xl">
           Ecosistema NariñoTex
         </Typography>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-px bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 overflow-hidden">
           <Link
             href="/catalogo"
-            className="group p-10 sm:p-16 bg-card hover:bg-muted transition-all duration-700 text-left flex flex-col border-b md:border-b-0 border-border"
+            className="group p-6 sm:p-16 bg-card hover:bg-muted transition-all duration-700 text-left flex flex-col border-b md:border-b-0 border-border"
           >
             <Sparkles
-              className="mb-8 sm:mb-10 text-primary group-hover:scale-110 transition-transform"
+              className="mb-6 sm:mb-10 text-primary group-hover:scale-110 transition-transform"
               size={18}
               strokeWidth={1}
             />
             <Typography
               variant="h3"
-              className="mb-4 sm:mb-6 uppercase tracking-[0.2em] text-[11px] sm:text-sm font-sans text-primary font-bold"
+              className="mb-3 sm:mb-6 uppercase tracking-[0.2em] text-[11px] sm:text-sm font-sans text-primary font-bold"
             >
               Galería de Textiles
             </Typography>
             <Typography
               variant="body"
-              className="text-secondary text-[11px] sm:text-xs mb-8 sm:mb-10 leading-relaxed font-light"
+              className="text-secondary text-[11px] sm:text-xs mb-6 sm:mb-10 leading-relaxed font-light"
             >
               Acceso directo a nuestro archivo de fibras y confecciones industriales.
             </Typography>
@@ -79,22 +79,22 @@ export default function Home() {
           </Link>
           <Link
             href="/eventos"
-            className="group p-10 sm:p-16 bg-card hover:bg-muted transition-all duration-700 text-left flex flex-col border-b md:border-b-0 border-border"
+            className="group p-6 sm:p-16 bg-card hover:bg-muted transition-all duration-700 text-left flex flex-col border-b md:border-b-0 border-border"
           >
             <Globe
-              className="mb-8 sm:mb-10 text-primary group-hover:scale-110 transition-transform"
+              className="mb-6 sm:mb-10 text-primary group-hover:scale-110 transition-transform"
               size={18}
               strokeWidth={1}
             />
             <Typography
               variant="h3"
-              className="mb-4 sm:mb-6 uppercase tracking-[0.2em] text-[11px] sm:text-sm font-sans text-primary font-bold"
+              className="mb-3 sm:mb-6 uppercase tracking-[0.2em] text-[11px] sm:text-sm font-sans text-primary font-bold"
             >
               Circuitos de Moda
             </Typography>
             <Typography
               variant="body"
-              className="text-secondary text-[11px] sm:text-xs mb-8 sm:mb-10 leading-relaxed font-light"
+              className="text-secondary text-[11px] sm:text-xs mb-6 sm:mb-10 leading-relaxed font-light"
             >
               Cronograma de galas, showrooms y espacios de reserva comercial.
             </Typography>
@@ -104,22 +104,22 @@ export default function Home() {
           </Link>
           <Link
             href="/nosotros"
-            className="group p-10 sm:p-16 bg-card hover:bg-muted transition-all duration-700 text-left flex flex-col"
+            className="group p-6 sm:p-16 bg-card hover:bg-muted transition-all duration-700 text-left flex flex-col"
           >
             <ShieldCheck
-              className="mb-8 sm:mb-10 text-primary group-hover:scale-110 transition-transform"
+              className="mb-6 sm:mb-10 text-primary group-hover:scale-110 transition-transform"
               size={18}
               strokeWidth={1}
             />
             <Typography
               variant="h3"
-              className="mb-4 sm:mb-6 uppercase tracking-[0.2em] text-[11px] sm:text-sm font-sans text-primary font-bold"
+              className="mb-3 sm:mb-6 uppercase tracking-[0.2em] text-[11px] sm:text-sm font-sans text-primary font-bold"
             >
               Legado Técnico
             </Typography>
             <Typography
               variant="body"
-              className="text-secondary text-[11px] sm:text-xs mb-8 sm:mb-10 leading-relaxed font-light"
+              className="text-secondary text-[11px] sm:text-xs mb-6 sm:mb-10 leading-relaxed font-light"
             >
               Un recorrido por nuestra metodología de producción y valores institucionales.
             </Typography>
@@ -131,7 +131,7 @@ export default function Home() {
       </section>
       {/* Cinematic Highlight */}
       <FullWidthVideo
-        videoUrl="/videos/VidBanner3.mp4"
+        videoUrl="https://istumdefdrxjir1m.public.blob.vercel-storage.com/VidBanner3.mp4"
         title="La Esencia del Movimiento"
         subtitle="Textiles diseñados para la libertad de expresión."
         actions={[
@@ -192,7 +192,6 @@ export default function Home() {
 
       <section className="py-32">
         <FeaturedProducts
-          products={mockProducts}
           title="Archivo Textil 2026"
           subtitle="Catálogo de Alta Gama"
         />

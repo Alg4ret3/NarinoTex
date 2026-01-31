@@ -17,11 +17,24 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   useEffect(() => {
     setMounted(true);
-    const savedTheme = localStorage.getItem('theme') as Theme | null;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
+    // Initial check
+    const savedTheme = localStorage.getItem('theme') as Theme | null;
+    const initialTheme = savedTheme || (mediaQuery.matches ? 'dark' : 'light');
     setTheme(initialTheme);
+
+    // Listen for changes
+    const handleChange = (e: MediaQueryListEvent) => {
+      // If user hasn't manually set a preference (or we want to respect system changes)
+      // For now, let's respect system changes immediately if no manual override is active?
+      // Or just always follow system change if it happens while app is open?
+      // Simpler approach: If system changes, update theme.
+      setTheme(e.matches ? 'dark' : 'light');
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   useEffect(() => {

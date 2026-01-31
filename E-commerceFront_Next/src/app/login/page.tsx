@@ -1,21 +1,124 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/organisms/Navbar';
 import { Footer } from '@/components/organisms/Footer';
 import { Typography } from '@/components/atoms/Typography';
 import { Button } from '@/components/atoms/Button';
-import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, AlertCircle, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { useUser } from '@/context/UserContext';
 
 export default function AuthPage() {
+  const router = useRouter();
+  const { user, login, register, isLoading, error, clearError } = useUser();
+  
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  
+  // Form states
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  });
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user?.isLoggedIn) {
+      router.push('/perfil');
+    }
+  }, [user, router]);
 
   const toggleAuth = () => {
     setIsLogin(!isLogin);
+    setLocalError(null);
+    setSuccessMessage(null);
+    clearError();
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+    });
   };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setLocalError(null);
+    setSuccessMessage(null);
+    clearError();
+  };
+
+  const validateForm = (): boolean => {
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setLocalError('Por favor ingrese un email válido');
+      return false;
+    }
+
+    // Password validation
+    if (formData.password.length < 8) {
+      setLocalError('La contraseña debe tener al menos 8 caracteres');
+      return false;
+    }
+
+    // Name validation for registration
+    if (!isLogin) {
+      if (!formData.firstName.trim() || !formData.lastName.trim()) {
+        setLocalError('Por favor ingrese su nombre completo');
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      if (isLogin) {
+        // Login
+        await login({
+          email: formData.email,
+          password: formData.password,
+        });
+        setSuccessMessage('¡Inicio de sesión exitoso!');
+        setTimeout(() => {
+          router.push('/perfil');
+        }, 1000);
+      } else {
+        // Register
+        await register({
+          email: formData.email,
+          password: formData.password,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+        });
+        setSuccessMessage('¡Registro exitoso! Redirigiendo...');
+        setTimeout(() => {
+          router.push('/perfil');
+        }, 1500);
+      }
+    } catch (err: any) {
+      // Error is already set in the context
+      console.error('Auth error:', err);
+    }
+  };
+
+  const displayError = localError || error;
 
   return (
     <main className="min-h-screen bg-background pt-24">
@@ -62,36 +165,91 @@ export default function AuthPage() {
               </Typography>
             </div>
 
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            {/* Error Message */}
+            <AnimatePresence>
+              {displayError && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mb-6 p-4 bg-red-500/10 border border-red-500/20 flex items-start gap-3"
+                >
+                  <AlertCircle className="text-red-500 flex-shrink-0 mt-0.5" size={18} />
+                  <p className="text-sm text-red-500">{displayError}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Success Message */}
+            <AnimatePresence>
+              {successMessage && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mb-6 p-4 bg-green-500/10 border border-green-500/20 flex items-start gap-3"
+                >
+                  <CheckCircle2 className="text-green-500 flex-shrink-0 mt-0.5" size={18} />
+                  <p className="text-sm text-green-500">{successMessage}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <AnimatePresence mode="wait">
                 {!isLogin && (
                   <motion.div
-                    key="name-field"
+                    key="name-fields"
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="space-y-2"
+                    className="space-y-6"
                   >
-                    <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Nombre Completo</label>
-                    <div className="relative group">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
-                      <input 
-                        type="text" 
-                        placeholder="John Doe"
-                        className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
-                      />
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Nombre</label>
+                      <div className="relative group">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
+                        <input 
+                          type="text"
+                          name="firstName"
+                          value={formData.firstName}
+                          onChange={handleInputChange}
+                          placeholder="Juan"
+                          required={!isLogin}
+                          className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Apellido</label>
+                      <div className="relative group">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
+                        <input 
+                          type="text"
+                          name="lastName"
+                          value={formData.lastName}
+                          onChange={handleInputChange}
+                          placeholder="Pérez"
+                          required={!isLogin}
+                          className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
+                        />
+                      </div>
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
 
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Email Corporativo</label>
+                <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Email</label>
                 <div className="relative group">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
                   <input 
-                    type="email" 
-                    placeholder="example@narinotex.com"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="ejemplo@email.com"
+                    required
                     className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
                   />
                 </div>
@@ -108,7 +266,12 @@ export default function AuthPage() {
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
                   <input 
                     type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
                     placeholder="••••••••"
+                    required
+                    minLength={8}
                     className="w-full bg-muted/30 border border-border py-4 pl-12 pr-12 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
                   />
                   <button 
@@ -122,8 +285,25 @@ export default function AuthPage() {
               </div>
 
               <div className="pt-4">
-                <Button type="submit" variant="primary" className="w-full py-4" size="lg">
-                  {isLogin ? "Acceder" : "Completar Registro"}
+                <Button 
+                  type="submit" 
+                  variant="primary" 
+                  className="w-full py-4" 
+                  size="lg"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                      />
+                      Procesando...
+                    </span>
+                  ) : (
+                    isLogin ? "Acceder" : "Completar Registro"
+                  )}
                 </Button>
               </div>
             </form>
@@ -131,7 +311,8 @@ export default function AuthPage() {
             <div className="mt-10 text-center">
               <button 
                 onClick={toggleAuth}
-                className="text-[10px] tracking-widest uppercase font-medium text-neutral-500 hover:text-primary transition-all"
+                disabled={isLoading}
+                className="text-[10px] tracking-widest uppercase font-medium text-neutral-500 hover:text-primary transition-all disabled:opacity-50"
               >
                 {isLogin 
                   ? "¿No tiene cuenta? Regístrese aquí" 

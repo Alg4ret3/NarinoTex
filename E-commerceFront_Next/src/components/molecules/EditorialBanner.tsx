@@ -19,9 +19,9 @@ export const EditorialBanner: React.FC<EditorialBannerProps> = ({
   quote = "La artesanía técnica es el lenguaje universal del lujo."
 }) => {
   return (
-    <section className="relative w-full h-auto sm:h-[90vh] flex flex-col sm:flex-row bg-background overflow-hidden border-b border-border">
+    <section className="relative w-full h-auto lg:h-[90vh] flex flex-col lg:flex-row bg-background overflow-hidden border-b border-border">
       {/* Left Content Side */}
-      <div className="w-full sm:w-1/2 flex flex-col justify-center px-8 sm:px-20 py-20 sm:py-0">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-12 lg:px-20 py-20 lg:py-0">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -52,7 +52,7 @@ export const EditorialBanner: React.FC<EditorialBannerProps> = ({
       </div>
 
       {/* Right Image Side with Overlapping Quote */}
-      <div className="w-full sm:w-1/2 relative h-[50vh] sm:h-full bg-neutral-100">
+      <div className="w-full lg:w-1/2 relative h-[50vh] lg:h-full bg-neutral-100">
         <motion.img 
           initial={{ scale: 1.1, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}

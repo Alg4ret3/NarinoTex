@@ -7,17 +7,19 @@ import { Typography } from '@/components/atoms/Typography';
 import { Button } from '@/components/atoms/Button';
 import { useUser, Address } from '@/context/UserContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, MapPin, Phone, Mail, Plus, Trash2, CheckCircle2, X } from 'lucide-react';
+import { User, MapPin, Phone, Plus, Trash2, CheckCircle2, X } from 'lucide-react';
+import { withAuth } from '@/components/hoc/withAuth';
 
-export default function ProfilePage() {
+function ProfilePage() {
   const { user, updateProfile, addAddress, removeAddress, setDefaultAddress } = useUser();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isAddingAddress, setIsAddingAddress] = useState(false);
   
   // Profile Form State
   const [profileForm, setProfileForm] = useState({
-    name: user.name,
-    phone: user.phone
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    phone: user?.phone || ''
   });
 
   // Address Form State
@@ -27,6 +29,9 @@ export default function ProfilePage() {
     city: '',
     country: 'Colombia'
   });
+  
+  // Safety check - withAuth should prevent this, but TypeScript needs it
+  if (!user) return null;
 
   const handleUpdateProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,11 +70,20 @@ export default function ProfilePage() {
               {isEditingProfile ? (
                 <form onSubmit={handleUpdateProfile} className="space-y-6">
                   <div className="space-y-2">
-                    <label className="text-[9px] uppercase tracking-widest text-neutral-500 font-medium">Nombre Completo</label>
+                    <label className="text-[9px] uppercase tracking-widest text-neutral-500 font-medium">Nombre</label>
                     <input 
                       type="text" 
-                      value={profileForm.name}
-                      onChange={e => setProfileForm({...profileForm, name: e.target.value})}
+                      value={profileForm.firstName}
+                      onChange={e => setProfileForm({...profileForm, firstName: e.target.value})}
+                      className="w-full bg-background border border-border/50 px-4 py-3 text-xs outline-none focus:border-primary transition-all font-sans"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[9px] uppercase tracking-widest text-neutral-500 font-medium">Apellido</label>
+                    <input 
+                      type="text" 
+                      value={profileForm.lastName}
+                      onChange={e => setProfileForm({...profileForm, lastName: e.target.value})}
                       className="w-full bg-background border border-border/50 px-4 py-3 text-xs outline-none focus:border-primary transition-all font-sans"
                     />
                   </div>
@@ -270,3 +284,5 @@ export default function ProfilePage() {
     </main>
   );
 }
+
+export default withAuth(ProfilePage);
