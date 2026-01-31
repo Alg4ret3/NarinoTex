@@ -15,7 +15,7 @@ export default function EventsPage() {
       {/* High Impact Video Header */}
       <section className="relative">
         <FullWidthVideo
-          videoUrl="/videos/VidEvent.mp4"
+          videoUrl="https://istumdefdrxjir1m.public.blob.vercel-storage.com/VidEvent.mp4"
           title="Calendario de Eventos: NariñoTex"
           subtitle="Ferias, semanas de la moda y encuentros comerciales donde industria y diseño se conectan."
           showBottomGradient={true}

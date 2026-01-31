@@ -22,7 +22,7 @@ export default function Home() {
       {/* Cinematic Entry Video */}
       <section className="relative w-full">
         <FullWidthVideo
-          videoUrl="/videos/VidBanner5.mp4"
+          videoUrl="https://istumdefdrxjir1m.public.blob.vercel-storage.com/VidBanner5.mp4"
           title="Alta Costura & Maestría"
           subtitle="Donde la tradición técnica se encuentra con la vanguardia estética."
           actions={[
@@ -131,7 +131,7 @@ export default function Home() {
       </section>
       {/* Cinematic Highlight */}
       <FullWidthVideo
-        videoUrl="/videos/VidBanner3.mp4"
+        videoUrl="https://istumdefdrxjir1m.public.blob.vercel-storage.com/VidBanner3.mp4"
         title="La Esencia del Movimiento"
         subtitle="Textiles diseñados para la libertad de expresión."
         actions={[
