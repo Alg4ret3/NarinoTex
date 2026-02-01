@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Typography } from '../atoms/Typography';
 import { ProductCard } from '../molecules/ProductCard';
-import { medusa } from '@/lib/medusa';
+import { getFeaturedProducts } from '@/services/medusa/products.client';
 
 interface FeaturedProductsProps {
   products?: any[];
@@ -30,12 +30,11 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
 
     const fetchProducts = async () => {
       try {
-        const { products } = await medusa.store.product.list({
-          limit: 8,
-        });
+        const products = await getFeaturedProducts(8);
+        console.log("🟢 Productos recibidos desde Medusa:", products);
         setProducts(products);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('🔴 Error fetching products:', error);
       } finally {
         setLoading(false);
       }
@@ -64,7 +63,10 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
               {title}
             </Typography>
           </div>
-          <a href="/catalogo" className="text-[10px] tracking-widest uppercase font-medium text-secondary hover:text-primary transition-colors border-b border-border pb-1">
+          <a
+            href="/catalogo"
+            className="text-[10px] tracking-widest uppercase font-medium text-secondary hover:text-primary transition-colors border-b border-border pb-1"
+          >
             Ver toda la colección
           </a>
         </div>
@@ -72,26 +74,27 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-8 gap-y-12 sm:gap-y-16">
         {products.map((product) => {
-          const displayPrice = typeof product.price === 'string' 
-            ? product.price 
-            : `$${(product.variants?.[0]?.prices?.[0]?.amount || 0) / 100} COP`;
+          const displayPrice = `$${(product.variants?.[0]?.prices?.[0]?.amount || 0) / 100} COP`;
 
           return (
             <ProductCard 
-              key={product.id} 
+              key={product.id}
               id={product.id}
-              name={product.title || product.name}
+              name={product.title}
               price={displayPrice}
-              image={product.thumbnail || product.image || 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=600&auto=format&fit=crop'} 
-              sizes={product.sizes}
-              colors={product.colors}
+              image={
+                product.thumbnail ||
+                product.images?.[0]?.url ||
+                'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=600'
+              }
             />
           );
         })}
+
         {products.length === 0 && (
           <div className="col-span-full py-24 text-center">
             <Typography variant="body" className="italic text-neutral-400">
-              No se encontraron productos que coincidan con los criterios.
+              No se encontraron productos.
             </Typography>
           </div>
         )}
