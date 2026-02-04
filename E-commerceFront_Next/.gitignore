@@ -18,6 +18,7 @@ yarn.lock
 # testing
 /coverage
 
+/public/assets/videos
 # next.js
 /.next/
 /out/

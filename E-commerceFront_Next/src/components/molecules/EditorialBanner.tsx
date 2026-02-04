@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Typography } from '../atoms/Typography';
 import { Button } from '../atoms/Button';
@@ -10,13 +11,17 @@ interface EditorialBannerProps {
   title: string;
   description: string;
   quote?: string;
+  ctaHref?: string;
+  secondaryHref?: string;
 }
 
 export const EditorialBanner: React.FC<EditorialBannerProps> = ({ 
   imageUrl, 
   title, 
   description,
-  quote = "La artesanía técnica es el lenguaje universal del lujo."
+  quote = "La artesanía técnica es el lenguaje universal del lujo.",
+  ctaHref = "/nosotros",
+  secondaryHref = "/nosotros"
 }) => {
   return (
     <section className="relative w-full h-auto lg:h-[90vh] flex flex-col lg:flex-row bg-background overflow-hidden border-b border-border">
@@ -41,12 +46,11 @@ export const EditorialBanner: React.FC<EditorialBannerProps> = ({
           </Typography>
           
           <div className="flex flex-col sm:flex-row gap-5">
-            <Button variant="primary" size="lg" className="px-10 py-5 text-[10px] tracking-[0.3em] uppercase">
-              Explorar Firma
-            </Button>
-            <Button variant="outline" size="lg" className="px-10 py-5 text-[10px] tracking-[0.3em] uppercase border-neutral-200">
-              Metodología
-            </Button>
+            <Link href={ctaHref}>
+              <Button variant="primary" size="lg" className="px-10 py-5 text-[10px] tracking-[0.3em] uppercase">
+                Explorar Firma
+              </Button>
+            </Link>
           </div>
         </motion.div>
       </div>
@@ -60,7 +64,7 @@ export const EditorialBanner: React.FC<EditorialBannerProps> = ({
           viewport={{ once: true }}
           src={imageUrl} 
           alt={title}
-          className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+          className="w-full h-full object-cover lg:grayscale lg:hover:grayscale-0 transition-all duration-1000"
         />
         
         {/* Floating Quote Card - Desktop Only */}

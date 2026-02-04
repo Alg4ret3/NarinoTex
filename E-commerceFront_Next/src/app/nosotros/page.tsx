@@ -14,6 +14,7 @@ import {
   Recycle,
   Globe2,
 } from "lucide-react";
+import { Timeline } from "@/components/molecules/Timeline";
 
 export default function AboutPage() {
   return (
@@ -79,6 +80,11 @@ export default function AboutPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Timeline */}
+      <section className="bg-neutral-50 dark:bg-black/20">
+        <Timeline />
       </section>
 
       {/* Misión y Visión */}
