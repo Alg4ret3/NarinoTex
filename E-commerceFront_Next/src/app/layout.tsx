@@ -20,11 +20,8 @@ export const metadata: Metadata = {
 import { ThemeProvider } from '@/context/ThemeContext';
 import { WhatsAppButton } from '@/components/atoms/WhatsAppButton';
 import { CartProvider } from '@/context/CartContext';
-import { ComparisonProvider } from '@/context/ComparisonContext';
 import { UserProvider } from '@/context/UserContext';
 import { CartDrawer } from '@/components/organisms/CartDrawer';
-import { ComparisonBar } from '@/components/molecules/ComparisonBar';
-import { ComparisonModal } from '@/components/organisms/ComparisonModal';
 
 export default function RootLayout({
   children,
@@ -57,15 +54,11 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <CartProvider>
-            <ComparisonProvider>
-              <UserProvider>
-                {children}
-              </UserProvider>
-              <WhatsAppButton />
-              <CartDrawer />
-              <ComparisonBar />
-              <ComparisonModal />
-            </ComparisonProvider>
+            <UserProvider>
+              {children}
+            </UserProvider>
+            <WhatsAppButton />
+            <CartDrawer />
           </CartProvider>
         </ThemeProvider>
       </body>

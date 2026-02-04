@@ -10,13 +10,15 @@ export interface CartItem {
   quantity: number;
   size?: string;
   color?: string;
+  type?: 'product' | 'ticket' | 'stand';
+  metadata?: Record<string, string | number | boolean>;
 }
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (item: Omit<CartItem, 'quantity'>) => void;
-  removeFromCart: (id: string, size?: string, color?: string) => void;
-  updateQuantity: (id: string, delta: number, size?: string, color?: string) => void;
+  addToCart: (item: CartItem) => void;
+  removeFromCart: (id: string, size?: string, color?: string, type?: string, metadata?: Record<string, string | number | boolean>) => void;
+  updateQuantity: (id: string, delta: number, size?: string, color?: string, type?: string, metadata?: Record<string, string | number | boolean>) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -50,32 +52,46 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('narinotex-cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (item: Omit<CartItem, 'quantity'>) => {
+  const addToCart = (item: CartItem) => {
     setCart(prev => {
       const existing = prev.find(i => 
         i.id === item.id && 
         i.size === item.size && 
-        i.color === item.color
+        i.color === item.color &&
+        i.type === item.type &&
+        JSON.stringify(i.metadata) === JSON.stringify(item.metadata)
       );
       if (existing) {
         return prev.map(i => 
-          (i.id === item.id && i.size === item.size && i.color === item.color)
-            ? { ...i, quantity: i.quantity + 1 } 
+          (i.id === item.id && i.size === item.size && i.color === item.color && i.type === item.type && JSON.stringify(i.metadata) === JSON.stringify(item.metadata))
+            ? { ...i, quantity: i.quantity + (item.quantity || 1) } 
             : i
         );
       }
-      return [...prev, { ...item, quantity: 1 }];
+      return [...prev, { ...item, quantity: item.quantity || 1 }];
     });
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (id: string, size?: string, color?: string) => {
-    setCart(prev => prev.filter(i => !(i.id === id && i.size === size && i.color === color)));
+  const removeFromCart = (id: string, size?: string, color?: string, type?: string, metadata?: Record<string, string | number | boolean>) => {
+    setCart(prev => prev.filter(i => !(
+      i.id === id && 
+      i.size === size && 
+      i.color === color && 
+      i.type === type && 
+      JSON.stringify(i.metadata) === JSON.stringify(metadata)
+    )));
   };
 
-  const updateQuantity = (id: string, delta: number, size?: string, color?: string) => {
+  const updateQuantity = (id: string, delta: number, size?: string, color?: string, type?: string, metadata?: Record<string, string | number | boolean>) => {
     setCart(prev => prev.map(i => {
-      if (i.id === id && i.size === size && i.color === color) {
+      if (
+        i.id === id && 
+        i.size === size && 
+        i.color === color && 
+        i.type === type && 
+        JSON.stringify(i.metadata) === JSON.stringify(metadata)
+      ) {
         const newQty = Math.max(1, i.quantity + delta);
         return { ...i, quantity: newQty };
       }

@@ -15,7 +15,7 @@ export const Footer: React.FC = () => {
                 alt="NariñoTex" 
                 width={100} 
                 height={32} 
-                className="h-8 w-auto dark:invert dark:brightness-0" 
+                className="h-8 w-auto dark:invert" 
               />
             </Link>
             <Typography variant="body" className="text-sm leading-relaxed max-w-xs text-secondary">
@@ -23,35 +23,20 @@ export const Footer: React.FC = () => {
             </Typography>
           </div>
           
-          <div>
-            <Typography variant="small" className="mb-8 block text-neutral-400">Tienda</Typography>
-            <ul className="space-y-4 text-[10px] tracking-widest uppercase font-medium text-secondary">
-              <li><a href="#" className="hover:text-primary transition-colors">Todos los Productos</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Nuevas Llegadas</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Más Vendidos</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <Typography variant="small" className="mb-8 block text-neutral-400">Ayuda</Typography>
-            <ul className="space-y-4 text-[10px] tracking-widest uppercase font-medium text-secondary">
-              <li><a href="#" className="hover:text-primary transition-colors">Soporte</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Envíos & Devoluciones</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Privacidad</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <Typography variant="small" className="mb-8 block text-neutral-400">Mundo NariñoTex</Typography>
-            <p className="text-xs text-secondary mb-6 font-light">Suscríbete para recibir noticias sobre nuestras últimas colecciones y eventos exclusivos.</p>
-            <div className="flex border-b border-border focus-within:border-primary transition-colors">
-              <input 
-                type="email" 
-                placeholder="Email" 
-                className="bg-transparent py-3 text-sm w-full focus:outline-none placeholder:text-neutral-500 font-light text-primary"
-              />
-              <button className="text-[10px] tracking-[0.2em] uppercase font-medium px-4 text-primary hover:text-secondary transition-colors">Unirme</button>
-            </div>
+          <div className="md:col-span-2">
+            <Typography variant="small" className="mb-8 block text-neutral-400">Navegación</Typography>
+             <div className="grid grid-cols-2 gap-8">
+                <ul className="space-y-4 text-[10px] tracking-widest uppercase font-medium text-secondary">
+                  <li><Link href="/boleteria" className="hover:text-primary transition-colors">Boletería</Link></li>
+                  <li><Link href="/stands" className="hover:text-primary transition-colors">Reserva de Stands</Link></li>
+                  <li><Link href="/colaboradores" className="hover:text-primary transition-colors">Colaboradores</Link></li>
+                </ul>
+                <ul className="space-y-4 text-[10px] tracking-widest uppercase font-medium text-secondary">
+                   <li><Link href="/nosotros" className="hover:text-primary transition-colors">Nosotros</Link></li>
+                   <li><Link href="/nosotros#contact" className="hover:text-primary transition-colors">Contacto</Link></li>
+                   <li><Link href="#" className="hover:text-primary transition-colors">Política de Privacidad</Link></li>
+                </ul>
+             </div>
           </div>
         </div>
 
