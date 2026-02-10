@@ -26,7 +26,7 @@ export function TicketingSection() {
           <div className="relative group overflow-hidden rounded-sm border border-white/10 hover:border-primary/50 transition-all duration-500 bg-neutral-800/50">
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10" />
             <Image 
-              src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1000" 
+              src="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Home/ContentBoleteria.webp" 
               alt="Boletería" 
               fill
               className="object-cover opacity-50 group-hover:scale-105 transition-transform duration-700"
@@ -50,7 +50,8 @@ export function TicketingSection() {
           <div className="relative group overflow-hidden rounded-sm border border-white/10 hover:border-primary/50 transition-all duration-500 bg-neutral-800/50">
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10" />
             <Image 
-              src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000" 
+              src="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Home/ContentStand.webp" 
+
               alt="Stands" 
               fill
               className="object-cover opacity-50 group-hover:scale-105 transition-transform duration-700"

@@ -34,7 +34,7 @@ export default function StandsPage() {
       {/* Hero - Replaced Video with High-Impact Image */}
       <section className="relative h-[80vh] min-h-[600px] flex items-center overflow-hidden">
         <Image 
-          src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2000&auto=format&fit=crop"
+          src="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Stands/ContentHeroStand.jpg"
           alt="Exhibition Center"
           fill
           className="object-cover"

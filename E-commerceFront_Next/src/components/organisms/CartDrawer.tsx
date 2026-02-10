@@ -1,14 +1,48 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { Typography } from '@/components/atoms/Typography';
 import { Button } from '@/components/atoms/Button';
-import { X, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
+import { X, Plus, Minus, Trash2, ShoppingBag, CreditCard, Loader2 } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export const CartDrawer: React.FC = () => {
-  const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalPrice, totalItems } = useCart();
+  const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalPrice, totalItems, clearCart } = useCart();
+  const router = useRouter();
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handlePurchase = async () => {
+    setIsProcessing(true);
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Generate unique Order ID
+    const orderId = crypto.randomUUID();
+    
+    // Create order object
+    const order = {
+      id: orderId,
+      date: new Date().toISOString(),
+      items: cart,
+      total: totalPrice,
+      status: 'paid'
+    };
+    
+    // Save to localStorage (simulating db)
+    const existingOrders = JSON.parse(localStorage.getItem('narinotex-orders') || '[]');
+    localStorage.setItem('narinotex-orders', JSON.stringify([order, ...existingOrders]));
+    
+    // Clear cart and close drawer
+    clearCart();
+    setIsCartOpen(false);
+    setIsProcessing(false);
+    
+    // Redirect to success page
+    router.push(`/checkout/success/${orderId}`);
+  };
 
   return (
     <AnimatePresence>
@@ -119,9 +153,23 @@ export const CartDrawer: React.FC = () => {
                   <Typography variant="h3" className="text-xl font-sans font-medium text-primary">${totalPrice.toLocaleString('es-CO', { minimumFractionDigits: 0 })} COP</Typography>
                 </div>
                 <div className="space-y-6">
-                  <button className="w-full bg-primary text-background py-5 text-[10px] uppercase tracking-[0.3em] font-medium hover:opacity-90 transition-all border border-primary">
-                    Continuar Compra
-                  </button>
+                  <Button 
+                    onClick={handlePurchase}
+                    disabled={isProcessing}
+                    className="w-full bg-primary text-background py-5 text-[10px] uppercase tracking-[0.3em] font-medium hover:opacity-90 transition-all border border-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" />
+                        Procesando...
+                      </>
+                    ) : (
+                      <>
+                        <CreditCard size={16} />
+                        Pagar Ahora
+                      </>
+                    )}
+                  </Button>
                   <Typography variant="small" className="text-center block text-neutral-400 text-[8px] tracking-[0.2em] font-light leading-relaxed uppercase">
                     Transacción segura • Boleta Digital
                   </Typography>

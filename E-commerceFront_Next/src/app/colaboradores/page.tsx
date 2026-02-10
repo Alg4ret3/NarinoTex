@@ -13,8 +13,8 @@ import { cn } from '@/lib/utils';
 // Tiered Sponsor Data
 const SPONSORS = {
   diamond: [
-    { name: 'Lexus', url: 'https://lexus.com.co', logo: 'https://placehold.co/600x400/262626/FFF?text=LEXUS' },
-    { name: 'Vogue', url: 'https://vogue.es', logo: 'https://placehold.co/600x400/262626/FFF?text=VOGUE' },
+    { name: 'Lexus', url: 'https://lexus.com.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp" },
+    { name: 'Vogue', url: 'https://vogue.es', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoTarrao.webp" },
   ],
   gold: [
     { name: 'Zara', url: 'https://zara.com', logo: 'https://placehold.co/400x200/262626/FFF?text=ZARA' },
@@ -23,10 +23,10 @@ const SPONSORS = {
     { name: 'Alcaldía de Pasto', url: 'https://pasto.gov.co', logo: 'https://placehold.co/400x200/262626/FFF?text=Alcaldia' },
   ],
   silver: [
-    { name: 'CC Pasto', url: 'https://ccpasto.org.co', logo: 'https://placehold.co/300x150/262626/FFF?text=CC+Pasto' },
-    { name: 'SENA', url: 'https://sena.edu.co', logo: 'https://placehold.co/300x150/262626/FFF?text=SENA' },
-    { name: 'Telepacífico', url: 'https://telepacifico.com', logo: 'https://placehold.co/300x150/262626/FFF?text=Telepacifico' },
-    { name: 'Caracol', url: 'https://caracol.com.co', logo: 'https://placehold.co/300x150/262626/FFF?text=Caracol' },
+    { name: 'CC Pasto', url: 'https://ccpasto.org.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp" },
+    { name: 'SENA', url: 'https://sena.edu.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoTarrao.webp" },
+    { name: 'Telepacífico', url: 'https://telepacifico.com', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp" },
+    { name: 'Caracol', url: 'https://caracol.com.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoTarrao.webp" },
     { name: 'RCN', url: 'https://rcnradio.com', logo: 'https://placehold.co/300x150/262626/FFF?text=RCN' },
     { name: 'El Tiempo', url: 'https://eltiempo.com', logo: 'https://placehold.co/300x150/262626/FFF?text=El+Tiempo' }
   ]

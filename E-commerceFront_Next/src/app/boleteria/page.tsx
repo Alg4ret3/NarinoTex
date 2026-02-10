@@ -34,7 +34,7 @@ export default function BoleteriaPage() {
       {/* Hero */}
       <section className="relative">
         <FullWidthVideo
-          videoUrl="https://github.com/Alg4ret3/videos/releases/download/v2.0.0/Event.mp4" 
+          videoUrl="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Boleteria/ContentHeroBoleteria.mp4 " 
           title="Boletería Oficial"
           subtitle="Tu acceso exclusivo a las pasarelas y conferencias más influyentes del sector."
           showBottomGradient={true}

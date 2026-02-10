@@ -32,7 +32,7 @@ export function PodcastSection({ className }: { className?: string }) {
           </Typography>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="https://www.youtube.com/@narinotex" target="_blank" rel="noopener noreferrer" className="inline-block">
+            <Link href="https://youtube.com/@narinotex?si=NPUDo7dgxIEy_nUK" target="_blank" rel="noopener noreferrer" className="inline-block">
                 <Button size="lg" className="w-full sm:w-auto bg-primary text-background hover:bg-primary/90 border-none gap-3">
                 <Youtube size={18} />
                 Mira los Videos en el Canal
@@ -45,7 +45,7 @@ export function PodcastSection({ className }: { className?: string }) {
              {/* Abstract Visual for Podcast Cover */}
             <div className="relative aspect-square md:aspect-[0.8] bg-neutral-200 dark:bg-neutral-800 border border-border p-8 flex flex-col justify-end overflow-hidden group">
                 <img 
-                    src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=1000" 
+                    src="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Home/ContentPodcast.webp" 
                     alt="Podcast Cover" 
                     className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-700"
                 />
@@ -56,10 +56,10 @@ export function PodcastSection({ className }: { className?: string }) {
                         Episodio #04
                      </span>
                      <Typography variant="h3" className="text-2xl sm:text-3xl font-serif text-white mb-2">
-                        &quot;El Hilo Invisible&quot;
+                        &quot;Vision y Desarrollo&quot;
                      </Typography>
                      <Typography variant="body" className="text-white text-sm">
-                        Con María Jacinta, Maestra Artesana
+                        Con Arturo Ortega, Director Camara de comercio de Pasto
                      </Typography>
                 </div>
             </div>

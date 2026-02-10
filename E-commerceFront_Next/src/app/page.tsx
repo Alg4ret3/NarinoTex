@@ -23,7 +23,7 @@ export default function Home() {
       {/* Cinematic Entry Video */}
       <section className="relative w-full">
         <FullWidthVideo
-          videoUrl="https://github.com/Alg4ret3/videos/releases/download/v2.0.0/VidHero.mp4"
+          videoUrl="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Home/ContentHero.mp4"
           title="NariñoTex: El Escenario de la Moda"
           subtitle="Donde la industria textil y el diseño de vanguardia convergen."
           actions={[
@@ -38,7 +38,7 @@ export default function Home() {
       <SponsorsBanner />
 
       <EditorialBanner
-        imageUrl="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2000&auto=format&fit=crop"
+        imageUrl="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Home/ContentBanner1.webp"
         title="Experiencias que Trascienden"
         description="Somos el punto de encuentro para líderes del sector textil, diseñadores emergentes y marcas globales. Un espacio para el intercambio de conocimiento y negocios."
         quote="La pasarela es el inicio, el negocio es el destino."
@@ -139,7 +139,7 @@ export default function Home() {
 
       {/* Cinematic Highlight - Epic Call to Action */}
       <FullWidthVideo
-        videoUrl="https://github.com/Alg4ret3/videos/releases/download/v2.0.0/VidHero2.mp4"
+        videoUrl="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Home/ContentBanner2.mp4"
         title="Tu Momento es Ahora"
         subtitle="Únete al evento que está redefiniendo la industria textil. Asegura tu lugar en la historia."
         actions={[
