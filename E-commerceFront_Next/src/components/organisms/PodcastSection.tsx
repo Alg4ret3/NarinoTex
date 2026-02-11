@@ -53,7 +53,7 @@ export function PodcastSection({ className }: { className?: string }) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                 <div className="relative z-10 transition-transform duration-700 group-hover:-translate-y-4">
                      <span className="inline-block px-3 py-1 bg-primary text-background text-[10px] font-bold uppercase tracking-widest mb-4">
-                        Episodio #04
+                        Episodio #02
                      </span>
                      <Typography variant="h3" className="text-2xl sm:text-3xl font-serif text-white mb-2">
                         &quot;Vision y Desarrollo&quot;

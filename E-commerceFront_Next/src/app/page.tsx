@@ -7,10 +7,10 @@ import { FullWidthVideo } from "@/components/molecules/FullWidthVideo";
 import { Typography } from "@/components/atoms/Typography";
 
 const Footer = dynamic(() => import("@/components/organisms/Footer").then(mod => mod.Footer));
-const BannerSlide = dynamic(() => import("@/components/molecules/BannerSlide").then(mod => mod.BannerSlide));
 import Link from "next/link";
 import { ArrowRight, Sparkles, Globe, ShieldCheck } from "lucide-react";
 import { SponsorsBanner } from "@/components/molecules/SponsorsBanner";
+import { GalleryCarousel } from "@/components/molecules/GalleryCarousel";
 import { PodcastSection } from "@/components/organisms/PodcastSection";
 import { TicketingSection } from "@/components/organisms/TicketingSection";
 
@@ -36,6 +36,9 @@ export default function Home() {
 
       {/* Sponsors Banner */}
       <SponsorsBanner />
+
+      {/* Highlights Gallery */}
+      <GalleryCarousel />
 
       <EditorialBanner
         imageUrl="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Home/ContentBanner1.webp"

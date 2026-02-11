@@ -1,29 +1,28 @@
 "use client";
 import { Typography } from "@/components/atoms/Typography";
 import { cn } from "../../lib/utils";
-
 import Image from "next/image";
 import Link from "next/link";
 
 const sponsors = [
   { 
-    name: "Artesanías de Colombia", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Artesanias_de_Colombia_logo.png/800px-Artesanias_de_Colombia_logo.png", 
+    name: "Tarrao", 
+    logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoTarrao.webp" , 
     url: "https://artesaniasdecolombia.com.co" 
   },
   { 
-    name: "ProColombia", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Logo_ProColombia.svg/1200px-Logo_ProColombia.svg.png", 
+    name: "Babalu", 
+    logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoBabalu.webp" , 
     url: "https://procolombia.co" 
   },
   { 
-    name: "Cámara de Comercio de Pasto", 
-    logo: "https://ccpasto.org.co/wp-content/uploads/2021/03/Logo-CCP-2021.png", 
+    name: "Cámara Colomnbiana de confeccion", 
+    logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp" , 
     url: "https://ccpasto.org.co" 
   },
   { 
-    name: "Ministerio de Cultura", 
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Logotipo_MinCultura_Colombia.svg/2000px-Logotipo_MinCultura_Colombia.svg.png", 
+    name: "Epson", 
+    logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoEpson.webp", 
     url: "https://mincultura.gov.co" 
   },
   { 
@@ -61,11 +60,13 @@ export function SponsorsBanner({ className }: { className?: string }) {
               rel="noopener noreferrer"
               className="group relative w-full flex justify-center items-center"
             >
-              <div className="relative w-full h-[70px] sm:h-[90px] grayscale group-hover:grayscale-0 transition-all duration-700 opacity-50 group-hover:opacity-100 transform group-hover:scale-110 flex items-center justify-center p-2">
-                 <img 
+              <div className="relative w-full h-[70px] sm:h-[90px] transition-all duration-700 transform group-hover:scale-110 flex items-center justify-center p-2">
+                 <Image 
                     src={sponsor.logo} 
                     alt={sponsor.name}
-                    className="max-w-full max-h-full object-contain dark:invert transition-all duration-700 brightness-0 group-hover:brightness-100 dark:brightness-200 dark:group-hover:brightness-100"
+                    fill
+                    className="object-contain transition-all duration-700"
+                    sizes="(max-width: 768px) 50vw, 20vw"
                  />
               </div>
             </Link>
