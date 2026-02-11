@@ -13,22 +13,22 @@ import { cn } from '@/lib/utils';
 // Tiered Sponsor Data
 const SPONSORS = {
   diamond: [
-    { name: 'Lexus', url: 'https://lexus.com.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp" },
-    { name: 'Vogue', url: 'https://vogue.es', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoTarrao.webp" },
+    { name: 'CCYA', url: 'https://lexus.com.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp" },
+    { name: 'Tarrao', url: 'https://vogue.es', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoTarrao.webp" },
   ],
   gold: [
-    { name: 'Zara', url: 'https://zara.com', logo: 'https://placehold.co/400x200/262626/FFF?text=ZARA' },
-    { name: 'H&M', url: 'https://hm.com', logo: 'https://placehold.co/400x200/262626/FFF?text=H%26M' },
-    { name: 'Gobernación de Nariño', url: 'https://narino.gov.co', logo: 'https://placehold.co/400x200/262626/FFF?text=Gobernacion' },
-    { name: 'Alcaldía de Pasto', url: 'https://pasto.gov.co', logo: 'https://placehold.co/400x200/262626/FFF?text=Alcaldia' },
+    { name: 'Zara', url: 'https://zara.com', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp"  },
+    { name: 'H&M', url: 'https://hm.com', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp"  },
+    { name: 'Gobernación de Nariño', url: 'https://narino.gov.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp"  },
+    { name: 'Alcaldía de Pasto', url: 'https://pasto.gov.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp"  },
   ],
   silver: [
     { name: 'CC Pasto', url: 'https://ccpasto.org.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp" },
     { name: 'SENA', url: 'https://sena.edu.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoTarrao.webp" },
     { name: 'Telepacífico', url: 'https://telepacifico.com', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp" },
     { name: 'Caracol', url: 'https://caracol.com.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoTarrao.webp" },
-    { name: 'RCN', url: 'https://rcnradio.com', logo: 'https://placehold.co/300x150/262626/FFF?text=RCN' },
-    { name: 'El Tiempo', url: 'https://eltiempo.com', logo: 'https://placehold.co/300x150/262626/FFF?text=El+Tiempo' }
+    { name: 'RCN', url: 'https://rcnradio.com', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp"  },
+    { name: 'El Tiempo', url: 'https://eltiempo.com', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp"  }
   ]
 };
 
@@ -51,12 +51,12 @@ const SponsorLogo = ({ brand, className }: { brand: Sponsor, className?: string 
       className
     )}
   >
-    <div className="relative w-full aspect-3/2">
+    <div className="relative w-full aspect-3/2 transition-all duration-700 transform group-hover:scale-110">
       <Image 
         src={brand.logo} 
         alt={brand.name}
         fill
-        className="object-contain grayscale group-hover:grayscale-0 opacity-40 group-hover:opacity-100 transition-all duration-700 scale-90 group-hover:scale-100"
+        className="object-contain transition-all duration-700"
       />
     </div>
     <div className="absolute inset-0 bg-primary/2 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -166,14 +166,14 @@ export default function ColaboradoresPage() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
-                className="group p-6 border border-border/30 hover:bg-muted transition-colors flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100"
+                className="group p-6 border border-border/30 hover:bg-muted transition-colors flex items-center justify-center"
               >
-                <div className="relative w-full aspect-2/1">
+                <div className="relative w-full aspect-2/1 transition-all duration-700 transform group-hover:scale-110">
                   <Image 
                     src={brand.logo} 
                     alt={brand.name} 
                     fill 
-                    className="object-contain"
+                    className="object-contain transition-all duration-700"
                   />
                 </div>
               </motion.a>
