@@ -1,16 +1,18 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  registerCustomer, 
-  loginCustomer, 
-  logoutCustomer, 
+import {
+  registerCustomer,
+  loginCustomer,
+  logoutCustomer,
   getCurrentCustomer,
   updateCustomer as updateCustomerService,
+  sendOtp as sendOtpService,
+  verifyOtp as verifyOtpService,
   type RegisterData,
   type LoginData,
   type CustomerData
-} from '@/services/auth.service';
+} from '@/services/medusa';
 
 export interface Address {
   id: string;
@@ -40,6 +42,8 @@ interface UserContextType {
   error: string | null;
   login: (data: LoginData) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
+  sendOtp: (email: string) => Promise<void>;
+  verifyOtp: (email: string, code: string) => Promise<{ verified: boolean }>;
   logout: () => Promise<void>;
   updateProfile: (data: Partial<Pick<User, 'firstName' | 'lastName' | 'phone'>>) => Promise<void>;
   addAddress: (address: Omit<Address, 'id'>) => void;
@@ -79,7 +83,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         setIsLoading(true);
         const customer = await getCurrentCustomer();
-        
+
         if (customer) {
           setUser(customerToUser(customer));
         }
@@ -95,27 +99,32 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (data: LoginData) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      
-      const customer = await loginCustomer(data);
-      setUser(customerToUser(customer));
-    } catch (err: any) {
-      setError(err.message || 'Error al iniciar sesión');
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  try {
+    setIsLoading(true);
+    setError(null);
+
+    const { customer, token } = await loginCustomer(data);
+
+    // 🔥 Guardar token
+    localStorage.setItem("auth_token", token);
+
+    setUser(customerToUser(customer));
+  } catch (err: any) {
+    setError(err.message || "Error al iniciar sesión");
+    throw err;
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const register = async (data: RegisterData) => {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const customer = await registerCustomer(data);
-      
+
       // After registration, login automatically
       await login({ email: data.email, password: data.password });
     } catch (err: any) {
@@ -126,16 +135,40 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const sendOtp = async (email: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      await sendOtpService(email);
+    } catch (err: any) {
+      setError(err.message || 'Error al enviar código');
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const verifyOtp = async (email: string, code: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      return await verifyOtpService(email, code);
+    } catch (err: any) {
+      setError(err.message || 'Código inválido');
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
   const logout = async () => {
     try {
       setIsLoading(true);
       setError(null);
-      
-      await logoutCustomer();
+
+      localStorage.removeItem("auth_token");
       setUser(null);
-    } catch (err: any) {
-      setError(err.message || 'Error al cerrar sesión');
-      throw err;
     } finally {
       setIsLoading(false);
     }
@@ -145,12 +178,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const updateData: any = {};
       if (data.firstName) updateData.first_name = data.firstName;
       if (data.lastName) updateData.last_name = data.lastName;
       if (data.phone !== undefined) updateData.phone = data.phone;
-      
+
       const customer = await updateCustomerService(updateData);
       setUser(customerToUser(customer));
     } catch (err: any) {
@@ -164,7 +197,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Local address management (TODO: integrate with Medusa addresses)
   const addAddress = (address: Omit<Address, 'id'>) => {
     if (!user) return;
-    
+
     const newAddress = { ...address, id: Math.random().toString(36).substr(2, 9) };
     setUser({
       ...user,
@@ -174,7 +207,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const removeAddress = (id: string) => {
     if (!user) return;
-    
+
     setUser({
       ...user,
       addresses: user.addresses.filter(a => a.id !== id)
@@ -183,7 +216,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const setDefaultAddress = (id: string) => {
     if (!user) return;
-    
+
     setUser({
       ...user,
       addresses: user.addresses.map(a => ({
@@ -198,16 +231,18 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <UserContext.Provider value={{ 
+    <UserContext.Provider value={{
       user,
       isLoading,
       error,
       login,
       register,
+      sendOtp,
+      verifyOtp,
       logout,
-      updateProfile, 
-      addAddress, 
-      removeAddress, 
+      updateProfile,
+      addAddress,
+      removeAddress,
       setDefaultAddress,
       clearError
     }}>

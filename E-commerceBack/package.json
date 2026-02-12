@@ -23,9 +23,17 @@
   },
   "dependencies": {
     "@medusajs/admin-sdk": "2.13.1",
+    "@medusajs/auth": "^2.13.1",
+    "@medusajs/auth-emailpass": "^2.13.1",
     "@medusajs/cli": "2.13.1",
     "@medusajs/framework": "2.13.1",
-    "@medusajs/medusa": "2.13.1"
+    "@medusajs/medusa": "2.13.1",
+    "@types/jsonwebtoken": "^9.0.10",
+    "ioredis": "^5.9.2",
+    "jsonwebtoken": "^9.0.3",
+    "medusa-core-utils": "^1.2.3",
+    "resend": "^6.9.1",
+    "scrypt-kdf": "^4.0.0"
   },
   "devDependencies": {
     "@medusajs/test-utils": "2.13.1",
