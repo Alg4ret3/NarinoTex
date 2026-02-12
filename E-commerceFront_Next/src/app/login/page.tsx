@@ -13,13 +13,15 @@ import { useUser } from '@/context/UserContext';
 
 export default function AuthPage() {
   const router = useRouter();
-  const { user, login, register, isLoading, error, clearError } = useUser();
-  
+  const { user, login, register, sendOtp, verifyOtp, isLoading, error, clearError } = useUser();
+
   const [isLogin, setIsLogin] = useState(true);
+  const [step, setStep] = useState(1); 
   const [showPassword, setShowPassword] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  
+  const [otpCode, setOtpCode] = useState('');
+
   // Form states
   const [formData, setFormData] = useState({
     firstName: '',
@@ -31,12 +33,14 @@ export default function AuthPage() {
   // Redirect if already logged in
   useEffect(() => {
     if (user?.isLoggedIn) {
-      router.push('/perfil');
+      router.push('/');
     }
   }, [user, router]);
 
   const toggleAuth = () => {
     setIsLogin(!isLogin);
+    setStep(1);
+    setOtpCode('');
     setLocalError(null);
     setSuccessMessage(null);
     clearError();
@@ -83,24 +87,55 @@ export default function AuthPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
 
-    try {
-      if (isLogin) {
-        // Login
+    if (isLogin) {
+      if (!validateForm()) return;
+      try {
         await login({
           email: formData.email,
           password: formData.password,
         });
         setSuccessMessage('¡Inicio de sesión exitoso!');
         setTimeout(() => {
-          router.push('/perfil');
+          router.push('/');
         }, 1000);
-      } else {
-        // Register
+      } catch (err) {
+        console.error('Login error:', err);
+      }
+      return;
+    }
+
+    // Registration flow
+    if (step === 1) {
+      // Step 1: Send OTP
+      if (!formData.email) {
+        setLocalError('Por favor ingrese un email');
+        return;
+      }
+      try {
+        await sendOtp(formData.email);
+        setStep(2);
+        setSuccessMessage('Código enviado a tu correo');
+      } catch (err) {
+        console.error('Send OTP error:', err);
+      }
+    } else if (step === 2) {
+      // Step 2: Verify OTP
+      if (otpCode.length < 6) {
+        setLocalError('El código debe tener 6 caracteres');
+        return;
+      }
+      try {
+        await verifyOtp(formData.email, otpCode);
+        setStep(3);
+        setSuccessMessage('Email verificado correctamente');
+      } catch (err) {
+        console.error('Verify OTP error:', err);
+      }
+    } else if (step === 3) {
+      // Step 3: Complete registration
+      if (!validateForm()) return;
+      try {
         await register({
           email: formData.email,
           password: formData.password,
@@ -109,12 +144,11 @@ export default function AuthPage() {
         });
         setSuccessMessage('¡Registro exitoso! Redirigiendo...');
         setTimeout(() => {
-          router.push('/perfil');
+          router.push('/');
         }, 1500);
+      } catch (err) {
+        console.error('Registration error:', err);
       }
-    } catch (err: any) {
-      // Error is already set in the context
-      console.error('Auth error:', err);
     }
   };
 
@@ -123,19 +157,19 @@ export default function AuthPage() {
   return (
     <main className="min-h-screen bg-background pt-24">
       <Navbar />
-      
+
       <div className="max-w-7xl mx-auto px-6 py-20 flex items-center justify-center">
         <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 bg-card border border-border shadow-2xl overflow-hidden min-h-[600px]">
-          
+
           {/* Visual Side (Hidden on mobile) */}
           <div className="hidden lg:block relative bg-muted overflow-hidden">
-            <motion.img 
+            <motion.img
               key={isLogin ? 'login-img' : 'register-img'}
               initial={{ opacity: 0, scale: 1.1 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2 }}
-              src={isLogin 
-                ? "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200" 
+              src={isLogin
+                ? "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200"
                 : "https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1200"
               }
               className="absolute inset-0 w-full h-full object-cover grayscale brightness-50"
@@ -148,7 +182,7 @@ export default function AuthPage() {
                 {isLogin ? "Bienvenido de Nuevo" : "Únete al Legado"}
               </Typography>
               <Typography variant="body" className="text-white/80 text-sm font-light leading-relaxed max-w-xs">
-                {isLogin 
+                {isLogin
                   ? "Accede a tu cuenta corporativa para gestionar pedidos y colecciones exclusivas."
                   : "Crea tu perfil profesional para acceder a nuestro catálogo completo y servicios técnicos."
                 }
@@ -196,99 +230,151 @@ export default function AuthPage() {
             </AnimatePresence>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
-              <AnimatePresence mode="wait">
-                {!isLogin && (
-                  <motion.div
-                    key="name-fields"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="space-y-6"
-                  >
-                    <div className="space-y-2">
-                      <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Nombre</label>
-                      <div className="relative group">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
-                        <input 
-                          type="text"
-                          name="firstName"
-                          value={formData.firstName}
-                          onChange={handleInputChange}
-                          placeholder="Juan"
-                          required={!isLogin}
-                          className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Apellido</label>
-                      <div className="relative group">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
-                        <input 
-                          type="text"
-                          name="lastName"
-                          value={formData.lastName}
-                          onChange={handleInputChange}
-                          placeholder="Pérez"
-                          required={!isLogin}
-                          className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Email</label>
-                <div className="relative group">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
-                  <input 
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="ejemplo@email.com"
-                    required
-                    className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
-                  />
+              {!isLogin && step === 1 && (
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Email de Registro</label>
+                  <div className="relative group">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="ejemplo@email.com"
+                      required
+                      className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Contraseña</label>
-                  {isLogin && (
-                    <Link href="#" className="text-[10px] uppercase tracking-widest text-neutral-400 hover:text-primary transition-colors">¿Olvidó su contraseña?</Link>
-                  )}
-                </div>
-                <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
-                  <input 
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    placeholder="••••••••"
-                    required
-                    minLength={8}
-                    className="w-full bg-muted/30 border border-border py-4 pl-12 pr-12 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
-                  />
-                  <button 
+              {!isLogin && step === 2 && (
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Código de Verificación</label>
+                    <div className="relative group">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
+                      <input
+                        type="text"
+                        name="otp"
+                        value={otpCode}
+                        onChange={(e) => setOtpCode(e.target.value)}
+                        placeholder="Ingrese el código de 6 dígitos"
+                        maxLength={6}
+                        required
+                        className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500 tracking-[0.5em] font-mono"
+                      />
+                    </div>
+                  </div>
+                  <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-primary transition-colors"
+                    onClick={() => setStep(1)}
+                    className="text-[10px] uppercase tracking-widest text-neutral-400 hover:text-primary transition-colors"
                   >
-                    {showPassword ? <EyeOff size={16} strokeWidth={1} /> : <Eye size={16} strokeWidth={1} />}
+                    ← Cambiar correo
                   </button>
                 </div>
-              </div>
+              )}
+
+              {(isLogin || (!isLogin && step === 3)) && (
+                <>
+                  <AnimatePresence mode="wait">
+                    {!isLogin && step === 3 && (
+                      <motion.div
+                        key="name-fields"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="space-y-6 mb-6"
+                      >
+                        <div className="space-y-2">
+                          <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Nombre</label>
+                          <div className="relative group">
+                            <User className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
+                            <input
+                              type="text"
+                              name="firstName"
+                              value={formData.firstName}
+                              onChange={handleInputChange}
+                              placeholder="Juan"
+                              required
+                              className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Apellido</label>
+                          <div className="relative group">
+                            <User className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
+                            <input
+                              type="text"
+                              name="lastName"
+                              value={formData.lastName}
+                              onChange={handleInputChange}
+                              placeholder="Pérez"
+                              required
+                              className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
+                            />
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {isLogin && (
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Email</label>
+                      <div className="relative group">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          placeholder="ejemplo@email.com"
+                          required
+                          className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Contraseña</label>
+                      {isLogin && (
+                        <Link href="#" className="text-[10px] uppercase tracking-widest text-neutral-400 hover:text-primary transition-colors">¿Olvidó su contraseña?</Link>
+                      )}
+                    </div>
+                    <div className="relative group">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        placeholder="••••••••"
+                        required
+                        minLength={8}
+                        className="w-full bg-muted/30 border border-border py-4 pl-12 pr-12 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-primary transition-colors"
+                      >
+                        {showPassword ? <EyeOff size={16} strokeWidth={1} /> : <Eye size={16} strokeWidth={1} />}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="pt-4">
-                <Button 
-                  type="submit" 
-                  variant="primary" 
-                  className="w-full py-4" 
+                <Button
+                  type="submit"
+                  variant="primary"
+                  className="w-full py-4"
                   size="lg"
                   disabled={isLoading}
                 >
@@ -302,20 +388,26 @@ export default function AuthPage() {
                       Procesando...
                     </span>
                   ) : (
-                    isLogin ? "Acceder" : "Completar Registro"
+                    isLogin
+                      ? "Acceder"
+                      : step === 1
+                        ? "Enviar Código"
+                        : step === 2
+                          ? "Verificar Código"
+                          : "Completar Registro"
                   )}
                 </Button>
               </div>
             </form>
 
             <div className="mt-10 text-center">
-              <button 
+              <button
                 onClick={toggleAuth}
                 disabled={isLoading}
                 className="text-[10px] tracking-widest uppercase font-medium text-neutral-500 hover:text-primary transition-all disabled:opacity-50"
               >
-                {isLogin 
-                  ? "¿No tiene cuenta? Regístrese aquí" 
+                {isLogin
+                  ? "¿No tiene cuenta? Regístrese aquí"
                   : "¿Ya tiene cuenta? Inicie sesión"
                 }
               </button>

@@ -11,6 +11,12 @@ importers:
       '@medusajs/admin-sdk':
         specifier: 2.13.1
         version: 2.13.1
+      '@medusajs/auth':
+        specifier: ^2.13.1
+        version: 2.13.1(@medusajs/framework@2.13.1(@medusajs/cli@2.13.1(@types/node@20.19.30))(@types/node@20.19.30)(ioredis@5.9.2)(vite@5.4.21(@types/node@20.19.30))(zod@3.25.76))
+      '@medusajs/auth-emailpass':
+        specifier: ^2.13.1
+        version: 2.13.1(@medusajs/framework@2.13.1(@medusajs/cli@2.13.1(@types/node@20.19.30))(@types/node@20.19.30)(ioredis@5.9.2)(vite@5.4.21(@types/node@20.19.30))(zod@3.25.76))
       '@medusajs/cli':
         specifier: 2.13.1
         version: 2.13.1(@types/node@20.19.30)

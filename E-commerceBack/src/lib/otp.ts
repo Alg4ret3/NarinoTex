@@ -24,9 +24,9 @@ export const OtpService = {
             }
 
             await resend.emails.send({
-                from: 'onboarding@resend.dev', 
+                from: 'NariñoTex <no-reply@visiontreepasto.com>',
                 to: email,
-                subject: 'Your login code for NariñoTex',
+                subject: 'Tú código de verificación para activar tu cuenta en NariñoTex',
                 html: `
                 <div style="
                     max-width: 480px;
