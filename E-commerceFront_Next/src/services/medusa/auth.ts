@@ -343,50 +343,24 @@ export async function changePassword(
  * Request password reset
  */
 export async function requestPasswordReset(email: string): Promise<void> {
-    try {
-        await medusaFetch("/auth/customer/emailpass/reset-password", {
-            method: "POST",
-            body: JSON.stringify({ email }),
-        });
-    } catch (error: any) {
-        console.error("Request password reset error:", error);
-        // No revelar si el email existe o no por seguridad
-        // Siempre mostrar mensaje exitoso
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/auth/customer/emailpass/reset-password`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        identifier: email,
+      }),
     }
+  );
+
+  // ⚠️ Nunca revelamos si existe o no
+  if (!res.ok) {
+    throw new Error("No se pudo procesar la solicitud");
+  }
 }
 
-/**
- * Reset password with token
- */
-export async function resetPassword(
-    token: string,
-    password: string,
-): Promise<void> {
-    try {
-        await medusaFetch("/auth/customer/emailpass/reset-password/confirm", {
-            method: "POST",
-            body: JSON.stringify({
-                token,
-                password,
-            }),
-        });
-    } catch (error: any) {
-        console.error("Reset password error:", error);
 
-        let errorMessage = "Error al restablecer contraseña.";
 
-        if (
-            error.message?.includes("token") ||
-            error.message?.includes("401") ||
-            error.message?.includes("expired")
-        ) {
-            errorMessage = "El enlace de restablecimiento es inválido o ha expirado.";
-        } else if (error.message?.includes("servidor")) {
-            errorMessage = error.message;
-        } else if (error.message && !error.message.includes("HTTP Error")) {
-            errorMessage = error.message;
-        }
-
-        throw new Error(errorMessage);
-    }
-}

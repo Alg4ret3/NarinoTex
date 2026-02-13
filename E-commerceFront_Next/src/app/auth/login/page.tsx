@@ -343,7 +343,7 @@ export default function AuthPage() {
                     <div className="flex justify-between items-center">
                       <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Contraseña</label>
                       {isLogin && (
-                        <Link href="/reset-password" className="text-[10px] uppercase tracking-widest text-neutral-400 hover:text-primary transition-colors">¿Olvidó su contraseña?</Link>
+                        <Link href="/auth/forgot-password" className="text-[10px] uppercase tracking-widest text-neutral-400 hover:text-primary transition-colors">¿Olvidó su contraseña?</Link>
                       )}
                     </div>
                     <div className="relative group">

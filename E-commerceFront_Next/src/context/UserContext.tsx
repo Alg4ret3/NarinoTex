@@ -9,6 +9,7 @@ import {
   updateCustomer as updateCustomerService,
   sendOtp as sendOtpService,
   verifyOtp as verifyOtpService,
+  requestPasswordReset as requestPasswordResetService,
   type RegisterData,
   type LoginData,
   type CustomerData
@@ -50,6 +51,7 @@ interface UserContextType {
   removeAddress: (id: string) => void;
   setDefaultAddress: (id: string) => void;
   clearError: () => void;
+  requestPasswordReset: (email: string) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -230,6 +232,23 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setError(null);
   };
 
+  const requestPasswordReset = async (email: string) => {
+  try {
+    setIsLoading(true);
+    setError(null);
+
+    await requestPasswordResetService(email);
+
+  } catch (err: any) {
+    // 🔒 Nunca exponemos si el correo existe
+    setError("Si el correo existe, recibirás instrucciones para restablecer tu contraseña");
+    throw err;
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
   return (
     <UserContext.Provider value={{
       user,
@@ -244,7 +263,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       addAddress,
       removeAddress,
       setDefaultAddress,
-      clearError
+      clearError,
+      requestPasswordReset
     }}>
       {children}
     </UserContext.Provider>

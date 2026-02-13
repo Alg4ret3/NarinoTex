@@ -100,7 +100,7 @@ export const Navbar: React.FC = () => {
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <Link 
-                href={user?.isLoggedIn ? "/perfil" : "/login"} 
+                href={user?.isLoggedIn ? "/perfil" : "/auth/login"} 
                 className="flex items-center gap-2 hover:text-primary transition-colors p-1"
               >
                 <User size={18} strokeWidth={1} />
@@ -210,7 +210,7 @@ export const Navbar: React.FC = () => {
                     )}
                   </button>
                   <Link 
-                    href={user?.isLoggedIn ? "/perfil" : "/login"}
+                    href={user?.isLoggedIn ? "/perfil" : "/auth/login"}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center gap-4 text-base font-sans font-light tracking-[0.2em] uppercase hover:text-primary transition-all group py-2"
                   >
@@ -260,7 +260,7 @@ export const Navbar: React.FC = () => {
                 <div className="flex flex-col gap-4">
                   <Typography variant="small" className="text-neutral-300">Privado</Typography>
                   <div className="flex flex-col gap-3 text-[10px] tracking-[0.2em] uppercase font-medium text-neutral-500">
-                    <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>Ingresar</Link>
+                    <Link href="/auth/login" onClick={() => setIsMobileMenuOpen(false)}>Ingresar</Link>
                     <Link href="/cart" onClick={() => setIsMobileMenuOpen(false)}>Bolsa (0)</Link>
                   </div>
                 </div>
