@@ -56,9 +56,9 @@ export default function RootLayout({
           <CartProvider>
             <UserProvider>
               {children}
+              <WhatsAppButton />
+              <CartDrawer />
             </UserProvider>
-            <WhatsAppButton />
-            <CartDrawer />
           </CartProvider>
         </ThemeProvider>
       </body>
