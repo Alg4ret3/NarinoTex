@@ -1,6 +1,6 @@
-import { loadEnv, defineConfig } from "@medusajs/framework/utils"
+import { loadEnv, defineConfig } from "@medusajs/framework/utils";
 
-loadEnv(process.env.NODE_ENV || "development", process.cwd())
+loadEnv(process.env.NODE_ENV || "development", process.cwd());
 
 module.exports = defineConfig({
   projectConfig: {
@@ -27,5 +27,22 @@ module.exports = defineConfig({
         ],
       },
     },
+
+    notification: {
+      resolve: "@medusajs/notification",
+      options: {
+        providers: [
+          {
+            resolve: "./src/modules/resend",
+            id: "resend",
+            options: {
+              api_key: process.env.RESEND_API_KEY,
+              from: "NariñoTex <no-reply@visiontreepasto.com>",
+              channels: ["email"],
+            },
+          },
+        ],
+      },
+    },
   },
-})
+});

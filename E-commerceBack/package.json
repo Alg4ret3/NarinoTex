@@ -28,6 +28,7 @@
     "@medusajs/cli": "2.13.1",
     "@medusajs/framework": "2.13.1",
     "@medusajs/medusa": "2.13.1",
+    "@medusajs/notification": "^2.13.1",
     "@types/jsonwebtoken": "^9.0.10",
     "ioredis": "^5.9.2",
     "jsonwebtoken": "^9.0.3",
