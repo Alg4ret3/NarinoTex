@@ -11,6 +11,10 @@ import { Mail, Lock, User, Eye, EyeOff, AlertCircle, CheckCircle2 } from 'lucide
 import Link from 'next/link';
 import { useUser } from '@/context/UserContext';
 
+const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
 export default function AuthPage() {
   const router = useRouter();
   const { user, login, register, sendOtp, verifyOtp, isLoading, error, clearError } = useUser();
@@ -29,6 +33,10 @@ export default function AuthPage() {
     email: '',
     password: '',
   });
+
+  const emailValid = validateEmail(formData.email);
+  const passwordValid = formData.password.length >= 1;
+  const loginFormValid = emailValid && passwordValid;
 
   // Redirect if already logged in
   useEffect(() => {
@@ -52,37 +60,39 @@ export default function AuthPage() {
     });
   };
 
+  const validateForm = (): boolean => {
+    if (!validateEmail(formData.email)) {
+      setLocalError("Por favor ingrese un email válido");
+      return false;
+    }
+
+    if (!formData.password) {
+      setLocalError("La contraseña es obligatoria");
+      return false;
+    }
+
+    if (!isLogin) {
+      if (!formData.firstName.trim() || !formData.lastName.trim()) {
+        setLocalError("Por favor ingrese su nombre completo");
+        return false;
+      }
+
+      if (formData.password.length < 8) {
+        setLocalError("La contraseña debe tener al menos 8 caracteres");
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     setLocalError(null);
     setSuccessMessage(null);
     clearError();
-  };
-
-  const validateForm = (): boolean => {
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setLocalError('Por favor ingrese un email válido');
-      return false;
-    }
-
-    // Password validation
-    if (formData.password.length < 8) {
-      setLocalError('La contraseña debe tener al menos 8 caracteres');
-      return false;
-    }
-
-    // Name validation for registration
-    if (!isLogin) {
-      if (!formData.firstName.trim() || !formData.lastName.trim()) {
-        setLocalError('Por favor ingrese su nombre completo');
-        return false;
-      }
-    }
-
-    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -323,9 +333,15 @@ export default function AuthPage() {
 
                   {isLogin && (
                     <div className="space-y-2">
-                      <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Email</label>
+                      <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">
+                        Email
+                      </label>
+
                       <div className="relative group">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
+                        <Mail
+                          className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400"
+                          size={16}
+                        />
                         <input
                           type="email"
                           name="email"
@@ -333,21 +349,42 @@ export default function AuthPage() {
                           onChange={handleInputChange}
                           placeholder="ejemplo@email.com"
                           required
-                          className="w-full bg-muted/30 border border-border py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
+                          className={`w-full bg-muted/30 py-4 pl-12 pr-4 text-sm focus:outline-none transition-all ${
+                            formData.email && !emailValid
+                              ? "border-red-500"
+                              : "border-border focus:border-primary"
+                          } border`}
                         />
                       </div>
+
+                      {formData.email && !emailValid && (
+                        <p className="text-xs text-red-500">
+                          Ingrese un correo válido
+                        </p>
+                      )}
                     </div>
                   )}
 
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
-                      <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">Contraseña</label>
+                      <label className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">
+                        Contraseña
+                      </label>
                       {isLogin && (
-                        <Link href="/auth/forgot-password" className="text-[10px] uppercase tracking-widest text-neutral-400 hover:text-primary transition-colors">¿Olvidó su contraseña?</Link>
+                        <Link
+                          href="/auth/forgot-password"
+                          className="text-[10px] uppercase tracking-widest text-neutral-400 hover:text-primary transition-colors"
+                        >
+                          ¿Olvidó su contraseña?
+                        </Link>
                       )}
                     </div>
+
                     <div className="relative group">
-                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-primary transition-colors" size={16} strokeWidth={1} />
+                      <Lock
+                        className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400"
+                        size={16}
+                      />
                       <input
                         type={showPassword ? "text" : "password"}
                         name="password"
@@ -355,17 +392,27 @@ export default function AuthPage() {
                         onChange={handleInputChange}
                         placeholder="••••••••"
                         required
-                        minLength={8}
-                        className="w-full bg-muted/30 border border-border py-4 pl-12 pr-12 text-sm focus:outline-none focus:border-primary transition-all placeholder:text-neutral-500"
+                        className={`w-full bg-muted/30 py-4 pl-12 pr-12 text-sm focus:outline-none transition-all ${
+                          formData.password.length === 0 && localError
+                            ? "border-red-500"
+                            : "border-border focus:border-primary"
+                        } border`}
                       />
+
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-primary transition-colors"
                       >
-                        {showPassword ? <EyeOff size={16} strokeWidth={1} /> : <Eye size={16} strokeWidth={1} />}
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     </div>
+
+                    {formData.password.length === 0 && localError && (
+                      <p className="text-xs text-red-500">
+                        La contraseña es obligatoria
+                      </p>
+                    )}
                   </div>
                 </>
               )}
@@ -376,7 +423,7 @@ export default function AuthPage() {
                   variant="primary"
                   className="w-full py-4"
                   size="lg"
-                  disabled={isLoading}
+                  disabled={isLoading || (isLogin && !loginFormValid)}
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">

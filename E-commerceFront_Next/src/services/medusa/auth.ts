@@ -308,59 +308,69 @@ export async function isAuthenticated(): Promise<boolean> {
 }
 
 /**
- * Change password (requiere autenticación)
+ * Request password reset
  */
-export async function changePassword(
-    oldPassword: string,
-    newPassword: string,
-): Promise<void> {
+export async function requestPasswordReset(email: string): Promise<void> {
     try {
-        await medusaFetch("/store/customers/me/password", {
-            method: "POST",
-            body: JSON.stringify({
-                old_password: oldPassword,
-                new_password: newPassword,
-            }),
-        });
+        await medusaFetch(
+            "/auth/customer/emailpass/reset-password",
+            {
+                method: "POST",
+                body: JSON.stringify({
+                    identifier: email,
+                }),
+            }
+        );
+
+        // ⚠️ Nunca revelamos si el email existe o no
     } catch (error: any) {
-        console.error("Change password error:", error);
+        console.error("Password reset request error:", error);
 
-        let errorMessage = "Error al cambiar contraseña.";
+        throw new Error(
+            "No se pudo procesar la solicitud. Intente nuevamente."
+        );
+    }
+}
 
-        if (error.message?.includes("401") || error.message?.includes("invalid")) {
-            errorMessage = "Contraseña actual incorrecta.";
-        } else if (error.message?.includes("servidor")) {
-            errorMessage = error.message;
-        } else if (error.message && !error.message.includes("HTTP Error")) {
-            errorMessage = error.message;
+/**
+ * Update password using reset token
+ */
+export async function updatePasswordWithToken(data: {
+    email: string;
+    token: string;
+    password: string;
+}): Promise<void> {
+    try {
+        await medusaFetch(
+            "/auth/customer/emailpass/update",
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${data.token}`, // 🔥 token correcto aquí
+                },
+                body: JSON.stringify({
+                    identifier: data.email,
+                    password: data.password,
+                }),
+            }
+        );
+    } catch (error: any) {
+        console.error("Update password error:", error);
+
+        let errorMessage = "Token inválido o expirado.";
+
+        if (
+            error.message?.includes("expired") ||
+            error.message?.includes("invalid") ||
+            error.message?.includes("401")
+        ) {
+            errorMessage = "El enlace de recuperación es inválido o ha expirado.";
         }
 
         throw new Error(errorMessage);
     }
 }
 
-/**
- * Request password reset
- */
-export async function requestPasswordReset(email: string): Promise<void> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/auth/customer/emailpass/reset-password`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        identifier: email,
-      }),
-    }
-  );
-
-  // ⚠️ Nunca revelamos si existe o no
-  if (!res.ok) {
-    throw new Error("No se pudo procesar la solicitud");
-  }
-}
 
 
 

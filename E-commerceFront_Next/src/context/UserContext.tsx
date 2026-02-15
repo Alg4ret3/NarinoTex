@@ -10,6 +10,7 @@ import {
   sendOtp as sendOtpService,
   verifyOtp as verifyOtpService,
   requestPasswordReset as requestPasswordResetService,
+  updatePasswordWithToken as updatePasswordWithTokenService,
   type RegisterData,
   type LoginData,
   type CustomerData
@@ -52,6 +53,7 @@ interface UserContextType {
   setDefaultAddress: (id: string) => void;
   clearError: () => void;
   requestPasswordReset: (email: string) => Promise<void>;
+  resetPassword: (email: string, token: string, password: string) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -233,21 +235,39 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const requestPasswordReset = async (email: string) => {
-  try {
-    setIsLoading(true);
-    setError(null);
+    try {
+      setIsLoading(true);
+      setError(null);
 
-    await requestPasswordResetService(email);
+      await requestPasswordResetService(email);
 
-  } catch (err: any) {
-    // 🔒 Nunca exponemos si el correo existe
-    setError("Si el correo existe, recibirás instrucciones para restablecer tu contraseña");
-    throw err;
-  } finally {
-    setIsLoading(false);
-  }
-};
+    } catch (err: any) {
+      // 🔒 Nunca exponemos si el correo existe
+      setError("Si el correo existe, recibirás instrucciones para restablecer tu contraseña");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  const resetPassword = async (email: string, token: string, password: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      await updatePasswordWithTokenService({
+        email,
+        token,
+        password,
+      });
+
+    } catch (err: any) {
+      setError(err.message || "No se pudo actualizar la contraseña");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <UserContext.Provider value={{
@@ -264,7 +284,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       removeAddress,
       setDefaultAddress,
       clearError,
-      requestPasswordReset
+      requestPasswordReset,
+      resetPassword
     }}>
       {children}
     </UserContext.Provider>

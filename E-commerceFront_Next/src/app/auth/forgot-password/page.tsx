@@ -82,7 +82,7 @@ export default function ForgotPasswordPage() {
                 Si el correo existe, recibirás un enlace para restablecer tu contraseña.
               </Typography>
 
-              <Link href="/auth">
+              <Link href="/auth/login">
                 <Button variant="primary">Volver al login</Button>
               </Link>
             </motion.div>
