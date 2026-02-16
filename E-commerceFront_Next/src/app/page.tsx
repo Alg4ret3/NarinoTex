@@ -12,9 +12,15 @@ import { ArrowRight, Sparkles, Globe, ShieldCheck } from "lucide-react";
 import { SponsorsBanner } from "@/components/molecules/SponsorsBanner";
 import { GalleryCarousel } from "@/components/molecules/GalleryCarousel";
 import { PodcastSection } from "@/components/organisms/PodcastSection";
-import { TicketingSection } from "@/components/organisms/TicketingSection";
+import { EventSection } from "@/components/organisms/EventSection";
+import { FlyerCarousel } from "@/components/molecules/FlyerCarousel";
+import { InternationalCommerce } from "@/components/organisms/InternationalCommerce";
+
+import { SITE_CONTENT } from "@/constants/siteContent";
 
 export default function Home() {
+  const { hero, pillars, editorial, ctaEpic } = SITE_CONTENT.home;
+
   return (
     <main className="min-h-screen bg-background">
       <Navbar />
@@ -22,14 +28,12 @@ export default function Home() {
 
       {/* Cinematic Entry Video */}
       <section className="relative w-full">
+        <FlyerCarousel />
         <FullWidthVideo
-          videoUrl="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Home/ContentHero.mp4"
-          title="NariñoTex: El Escenario de la Moda"
-          subtitle="Donde la industria textil y el diseño de vanguardia convergen."
-          actions={[
-            { label: "Comprar Entradas", href: "/boleteria", variant: "primary" },
-            { label: "Reservar Stand", href: "/stands", variant: "outline" },
-          ]}
+          videoUrl={hero.videoUrl}
+          title={hero.title}
+          subtitle={hero.subtitle}
+          actions={hero.cta}
           align="left"
         />
       </section>
@@ -41,10 +45,10 @@ export default function Home() {
       <GalleryCarousel />
 
       <EditorialBanner
-        imageUrl="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Home/ContentBanner1.webp"
-        title="Experiencias que Trascienden"
-        description="Somos el punto de encuentro para líderes del sector textil, diseñadores emergentes y marcas globales. Un espacio para el intercambio de conocimiento y negocios."
-        quote="La pasarela es el inicio, el negocio es el destino."
+        imageUrl={editorial.image}
+        title={editorial.title}
+        description={editorial.description}
+        quote={editorial.quote}
       />
 
       {/* Intro Hub - Reoriented to Company, Exhibition, and Ticketing */}
@@ -56,84 +60,41 @@ export default function Home() {
           Nuestros Pilares
         </Typography>
         <Typography variant="h2" className="mb-8 sm:mb-24 text-3xl sm:text-5xl">
-          Ecosistema Ferial
+          {pillars.title}
         </Typography>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-px bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 overflow-hidden">
-          <Link
-            href="/nosotros"
-            className="group p-6 sm:p-16 bg-card hover:bg-muted transition-all duration-700 text-left flex flex-col border-b md:border-b-0 border-border"
-          >
-            <ShieldCheck
-              className="mb-6 sm:mb-10 text-primary group-hover:scale-110 transition-transform"
-              size={18}
-              strokeWidth={1}
-            />
-            <Typography
-              variant="h3"
-              className="mb-3 sm:mb-6 uppercase tracking-[0.2em] text-[11px] sm:text-sm font-sans text-primary font-bold"
-            >
-              Nuestra Empresa
-            </Typography>
-            <Typography
-              variant="body"
-              className="text-secondary text-[11px] sm:text-xs mb-6 sm:mb-10 leading-relaxed font-light"
-            >
-              Conoce la organización detrás del evento textil más importante de la región y nuestra visión de futuro.
-            </Typography>
-            <div className="mt-auto flex items-center gap-2 text-[9px] tracking-[0.2em] uppercase font-medium text-secondary group-hover:text-primary transition-colors opacity-60 group-hover:opacity-100">
-              Sobre Nosotros <ArrowRight size={10} />
-            </div>
-          </Link>
-          <Link
-            href="/stands"
-            className="group p-6 sm:p-16 bg-card hover:bg-muted transition-all duration-700 text-left flex flex-col border-b md:border-b-0 border-border"
-          >
-            <Sparkles
-              className="mb-6 sm:mb-10 text-primary group-hover:scale-110 transition-transform"
-              size={18}
-              strokeWidth={1}
-            />
-            <Typography
-              variant="h3"
-              className="mb-3 sm:mb-6 uppercase tracking-[0.2em] text-[11px] sm:text-sm font-sans text-primary font-bold"
-            >
-              Exhibición Comercial
-            </Typography>
-            <Typography
-              variant="body"
-              className="text-secondary text-[11px] sm:text-xs mb-6 sm:mb-10 leading-relaxed font-light"
-            >
-              Espacios exclusivos para marcas que buscan visibilidad, networking de alto nivel y oportunidades de negocio.
-            </Typography>
-            <div className="mt-auto flex items-center gap-2 text-[9px] tracking-[0.2em] uppercase font-medium text-secondary group-hover:text-primary transition-colors opacity-60 group-hover:opacity-100">
-              Ver Stands <ArrowRight size={10} />
-            </div>
-          </Link>
-          <Link
-            href="/boleteria"
-            className="group p-6 sm:p-16 bg-card hover:bg-muted transition-all duration-700 text-left flex flex-col"
-          >
-            <Globe
-              className="mb-6 sm:mb-10 text-primary group-hover:scale-110 transition-transform"
-              size={18}
-              strokeWidth={1}
-            />
-            <Typography
-              variant="h3"
-              className="mb-3 sm:mb-6 uppercase tracking-[0.2em] text-[11px] sm:text-sm font-sans text-primary font-bold"
-            >
-              Boletería & Eventos
-            </Typography>
-            <Typography
-              variant="body"
-              className="text-secondary text-[11px] sm:text-xs mb-6 sm:mb-10 leading-relaxed font-light"
-            >
-              Accede a pasarelas, conferencias y eventos exclusivos. Reserva tu lugar en la experiencia textil del año.
-            </Typography>
-            <div className="mt-auto flex items-center gap-2 text-[9px] tracking-[0.2em] uppercase font-medium text-secondary group-hover:text-primary transition-colors opacity-60 group-hover:opacity-100">
-              Comprar Boletas <ArrowRight size={10} />
-            </div>
-          </Link>
+          {pillars.items.map((item) => {
+            const Icon = item.iconName === "ShieldCheck" ? ShieldCheck : 
+                         item.iconName === "Sparkles" ? Sparkles : Globe;
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                className="group p-6 sm:p-16 bg-card hover:bg-muted transition-all duration-700 text-left flex flex-col border-b md:border-b-0 border-border last:border-b-0"
+              >
+                <Icon
+                  className="mb-6 sm:mb-10 text-primary group-hover:scale-110 transition-transform"
+                  size={18}
+                  strokeWidth={1}
+                />
+                <Typography
+                  variant="h3"
+                  className="mb-3 sm:mb-6 uppercase tracking-[0.2em] text-[11px] sm:text-sm font-sans text-primary font-bold"
+                >
+                  {item.title}
+                </Typography>
+                <Typography
+                  variant="body"
+                  className="text-secondary text-[11px] sm:text-xs mb-6 sm:mb-10 leading-relaxed font-light"
+                >
+                  {item.description}
+                </Typography>
+                <div className="mt-auto flex items-center gap-2 text-[9px] tracking-[0.2em] uppercase font-medium text-secondary group-hover:text-primary transition-colors opacity-60 group-hover:opacity-100">
+                  {item.linkText} <ArrowRight size={10} />
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -142,20 +103,20 @@ export default function Home() {
 
       {/* Cinematic Highlight - Epic Call to Action */}
       <FullWidthVideo
-        videoUrl="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Home/ContentBanner2.mp4"
-        title="Tu Momento es Ahora"
-        subtitle="Únete al evento que está redefiniendo la industria textil. Asegura tu lugar en la historia."
-        actions={[
-          { label: "Reservar Boletas", href: "/boleteria", variant: "primary" },
-          { label: "Reservar Stand", href: "/stands", variant: "outline" },
-        ]}
+        videoUrl={ctaEpic.videoUrl}
+        title={ctaEpic.title}
+        subtitle={ctaEpic.subtitle}
+        actions={ctaEpic.actions}
         align="center"
         showBottomGradient={true}
       />
 
 
+      {/* International Commerce */}
+      <InternationalCommerce />
+
       {/* Ticketing & Stands */}
-      <TicketingSection />
+      <EventSection />
 
       <Footer />
     </main>

@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Typography } from '../atoms/Typography';
+import { aboutContent } from '@/constants/content/about';
 
 export const Footer: React.FC = () => {
   return (
@@ -27,14 +28,14 @@ export const Footer: React.FC = () => {
             <Typography variant="small" className="mb-8 block text-neutral-400">Navegación</Typography>
              <div className="grid grid-cols-2 gap-8">
                 <ul className="space-y-4 text-[10px] tracking-widest uppercase font-medium text-secondary">
-                  <li><Link href="/boleteria" className="hover:text-primary transition-colors">Boletería</Link></li>
+                  <li><Link href="/boleteria" className="hover:text-primary transition-colors">Venta de Boletería</Link></li>
                   <li><Link href="/stands" className="hover:text-primary transition-colors">Reserva de Stands</Link></li>
                   <li><Link href="/colaboradores" className="hover:text-primary transition-colors">Colaboradores</Link></li>
                 </ul>
                 <ul className="space-y-4 text-[10px] tracking-widest uppercase font-medium text-secondary">
                    <li><Link href="/nosotros" className="hover:text-primary transition-colors">Nosotros</Link></li>
                    <li><Link href="/nosotros#contact" className="hover:text-primary transition-colors">Contacto</Link></li>
-                   <li><Link href="#" className="hover:text-primary transition-colors">Política de Privacidad</Link></li>
+                   <li><Link href="/privacidad" className="hover:text-primary transition-colors">Política de Privacidad</Link></li>
                 </ul>
              </div>
           </div>
@@ -43,8 +44,7 @@ export const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-border text-[10px] tracking-widest uppercase font-medium text-neutral-500">
           <p>© 2026 NariñoTex. Todos los derechos reservados.</p>
           <div className="flex gap-10 mt-6 md:mt-0">
-            <a href="#" className="hover:text-primary transition-colors">Instagram</a>
-            <a href="#" className="hover:text-primary transition-colors">LinkedIn</a>
+            <a href={aboutContent.social.items.find(item => item.id === 'instagram')?.url} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">Instagram</a>
           </div>
         </div>
       </div>

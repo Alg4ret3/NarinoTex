@@ -10,27 +10,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-// Tiered Sponsor Data
-const SPONSORS = {
-  diamond: [
-    { name: 'CCYA', url: 'https://lexus.com.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp" },
-    { name: 'Tarrao', url: 'https://vogue.es', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoTarrao.webp" },
-  ],
-  gold: [
-    { name: 'Zara', url: 'https://zara.com', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp"  },
-    { name: 'H&M', url: 'https://hm.com', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp"  },
-    { name: 'Gobernación de Nariño', url: 'https://narino.gov.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp"  },
-    { name: 'Alcaldía de Pasto', url: 'https://pasto.gov.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp"  },
-  ],
-  silver: [
-    { name: 'CC Pasto', url: 'https://ccpasto.org.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp" },
-    { name: 'SENA', url: 'https://sena.edu.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoTarrao.webp" },
-    { name: 'Telepacífico', url: 'https://telepacifico.com', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp" },
-    { name: 'Caracol', url: 'https://caracol.com.co', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoTarrao.webp" },
-    { name: 'RCN', url: 'https://rcnradio.com', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp"  },
-    { name: 'El Tiempo', url: 'https://eltiempo.com', logo: "https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Colaboradores/LogoCCCyA.webp"  }
-  ]
-};
+import { SITE_CONTENT } from '@/constants/siteContent';
 
 interface Sponsor {
   name: string;
@@ -59,11 +39,12 @@ const SponsorLogo = ({ brand, className }: { brand: Sponsor, className?: string 
         className="object-contain transition-all duration-700"
       />
     </div>
-    <div className="absolute inset-0 bg-primary/2 opacity-0 group-hover:opacity-100 transition-opacity" />
   </motion.a>
 );
 
 export default function ColaboradoresPage() {
+  const { hero, sponsors, cta } = SITE_CONTENT.collaborators;
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Navbar />
@@ -87,11 +68,11 @@ export default function ColaboradoresPage() {
             transition={{ duration: 0.8 }}
           >
             <Typography variant="small" className="mb-6 block text-primary tracking-[0.4em] uppercase font-bold text-[10px]">
-              Alianzas que Transforman
+              {hero.subtitle}
             </Typography>
             <Typography variant="h1" className="text-5xl sm:text-8xl font-serif leading-[0.9] editorial-spacing">
-              Nuestros <br /> 
-              <span className="text-primary italic">Aliados</span>
+              {hero.title.split(' ')[0]} <br /> 
+              <span className="text-primary italic">{hero.title.split(' ').slice(1).join(' ')}</span>
             </Typography>
           </motion.div>
           
@@ -102,7 +83,7 @@ export default function ColaboradoresPage() {
             className="pb-4"
           >
             <Typography variant="body" className="text-secondary font-light text-xl leading-relaxed max-w-xl border-l border-primary/30 pl-8">
-              NariñoTex es el resultado de la sinergia entre el sector público, la empresa privada y mentes creativas. Juntos, tejemos el futuro de la moda regional.
+              {hero.description}
             </Typography>
           </motion.div>
         </div>
@@ -120,13 +101,13 @@ export default function ColaboradoresPage() {
           <div className="flex items-center gap-4 mb-16">
             <div className="h-px flex-1 bg-border/40" />
             <Typography variant="small" className="uppercase tracking-[0.3em] text-primary/60 font-medium">
-              Socia-Estratégicos
+              {sponsors.diamond.label}
             </Typography>
             <div className="h-px flex-1 bg-border/40" />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border max-w-5xl mx-auto">
-            {SPONSORS.diamond.map((brand, i) => (
+            {sponsors.diamond.items.map((brand, i) => (
               <SponsorLogo key={i} brand={brand} className="p-16 sm:p-24" />
             ))}
           </div>
@@ -135,12 +116,12 @@ export default function ColaboradoresPage() {
         {/* GOLD Tier - Grid */}
         <div className="mb-32">
           <div className="mb-16 text-center">
-            <Typography variant="h2" className="text-3xl font-serif mb-4">Patrocinadores Oficiales</Typography>
+            <Typography variant="h2" className="text-3xl font-serif mb-4">{sponsors.gold.label}</Typography>
             <div className="w-12 h-0.5 bg-primary mx-auto" />
           </div>
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {SPONSORS.gold.map((brand, i) => (
+            {sponsors.gold.items.map((brand, i) => (
               <SponsorLogo key={i} brand={brand} />
             ))}
           </div>
@@ -150,13 +131,13 @@ export default function ColaboradoresPage() {
         <div>
           <div className="mb-16">
             <Typography variant="small" className="uppercase tracking-[0.3em] text-primary/60 font-medium mb-4 block">
-              Aliados & Media Partners
+              {sponsors.silver.label}
             </Typography>
             <div className="w-full h-px bg-border/60" />
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {SPONSORS.silver.map((brand, i) => (
+            {sponsors.silver.items.map((brand, i) => (
               <motion.a 
                 key={i}
                 href={brand.url}
@@ -185,7 +166,7 @@ export default function ColaboradoresPage() {
       {/* CTA Section - Replaced Video with High-Impact Image */}
       <section className="relative mt-20 h-[60vh] min-h-[500px] overflow-hidden group">
         <Image 
-          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2000&auto=format&fit=crop"
+          src={cta.image}
           alt="Fashion Editorial"
           fill
           className="object-cover transition-transform duration-1000 group-hover:scale-105"
@@ -194,10 +175,10 @@ export default function ColaboradoresPage() {
           <div className="max-w-7xl mx-auto px-6 w-full">
             <div className="max-w-2xl">
               <Typography variant="h2" className="text-4xl sm:text-6xl font-serif text-white mb-6 leading-tight">
-                Tu Marca en la Pasarela
+                {cta.title}
               </Typography>
               <Typography variant="body" className="text-white/80 font-light text-lg mb-10 max-w-xl leading-relaxed">
-                Únete al networking de moda más importante del sur de Colombia y posiciona tu marca ante líderes del sector.
+                {cta.description}
               </Typography>
               <Button 
                 onClick={() => window.location.href = '/nosotros#contact'}
@@ -205,7 +186,7 @@ export default function ColaboradoresPage() {
                 size="lg"
                 className="w-full sm:w-auto px-12"
               >
-                Convertirse en Patrocinador
+                {cta.buttonText}
               </Button>
             </div>
           </div>
