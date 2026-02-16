@@ -5,57 +5,24 @@ import { Typography } from "@/components/atoms/Typography";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { motion } from "framer-motion";
-
-interface TimelineEvent {
-  year: string;
-  title: string;
-  description: string;
-  image: string;
-}
-
-const events: TimelineEvent[] = [
-  {
-    year: "2010",
-    title: "Origen en los Andes",
-    description: "NariñoTex nace como un taller de preservación de técnicas ancestrales en Pasto, rescatando el valor de lo hecho a mano.",
-    image: "https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=1200"
-  },
-  {
-    year: "2015",
-    title: "Expansión Industrial",
-    description: "Fusión de telares manuales con tecnología moderna, permitiendo escala sin comprometer la esencia artesanal.",
-    image: "https://images.unsplash.com/photo-1558769132-cb1f1d774add?q=80&w=1200"
-  },
-  {
-    year: "2018",
-    title: "Innovación Sostenible",
-    description: "Lanzamiento del laboratorio de tinturas orgánicas y fibras recicladas, marcando un hito en sostenibilidad regional.",
-    image: "https://images.unsplash.com/photo-1529156069896-8593a491a27d?q=80&w=1200"
-  },
-  {
-    year: "2022",
-    title: "Proyección Global",
-    description: "Consolidación en mercados europeos como marca de lujo artesanal, llevando el diseño nariñense a Madrid y Milán.",
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200"
-  },
-  {
-    year: "2026",
-    title: "La Era Digital",
-    description: "Plataforma de comercio internacional que conecta directamente a tejedores locales con el mercado global.",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200"
-  },
-];
+import { SITE_CONTENT } from "@/constants/siteContent";
 
 export function Timeline({ className }: { className?: string }) {
+  const { subtitle, title, events } = SITE_CONTENT.about.timeline;
+
   return (
     <section className={cn("py-24 sm:py-32 bg-background", className)}>
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="mb-20 sm:mb-32">
           <Typography variant="small" className="mb-4 text-primary tracking-[0.3em] uppercase font-bold text-[10px]">
-            Legado & Trayectoria
+            {subtitle}
           </Typography>
           <Typography variant="h2" className="text-4xl sm:text-6xl font-serif max-w-2xl leading-[1.1]">
-            Crónica de una <br /> Visión Textil
+            {title.split(' <br /> ').length > 1 ? (
+              <>
+                {title.split(' <br /> ')[0]} <br /> {title.split(' <br /> ')[1]}
+              </>
+            ) : title}
           </Typography>
         </div>
 

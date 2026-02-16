@@ -16,7 +16,11 @@ import {
 } from "lucide-react";
 import { Timeline } from "@/components/molecules/Timeline";
 
+import { SITE_CONTENT } from "@/constants/siteContent";
+
 export default function AboutPage() {
+  const { hero, missionVision, innovation, contact, social } = SITE_CONTENT.about;
+
   return (
     <main className="min-h-screen bg-background pt-24">
       <Navbar />
@@ -29,51 +33,40 @@ export default function AboutPage() {
               variant="small"
               className="mb-6 block tracking-[0.3em] text-neutral-400"
             >
-              Manifiesto Institucional
+              {hero.subtitle}
             </Typography>
             <Typography variant="h1" className="mb-10 leading-tight">
-              Elevando la Herencia Textil
+              {hero.title}
             </Typography>
             <Typography
               variant="body"
               className="mb-8 text-secondary font-light leading-relaxed"
             >
-              NariñoTex representa la convergencia entre la rigurosidad técnica
-              y la sensibilidad artística de los Andes colombianos. Nuestra
-              práctica se fundamenta en la preservación de técnicas ancestrales
-              mediante la implementación de estándares de calidad internacional.
+              {hero.description1}
             </Typography>
             <Typography
               variant="body"
               className="mb-12 text-secondary font-light leading-relaxed"
             >
-              Desde nuestro centro operativo en Pasto, proyectamos soluciones
-              textiles que desafían la temporalidad, enfocados en la durabilidad
-              del material y la pureza del diseño contemporáneo.
+              {hero.description2}
             </Typography>
             <div className="grid grid-cols-2 gap-12 border-t border-border pt-12">
-              <div>
-                <Typography variant="h3" className="mb-2 font-sans font-light">
-                  15+
-                </Typography>
-                <Typography variant="small" className="text-neutral-400">
-                  Años de Maestría
-                </Typography>
-              </div>
-              <div>
-                <Typography variant="h3" className="mb-2 font-sans font-light">
-                  200+
-                </Typography>
-                <Typography variant="small" className="text-neutral-400">
-                  Proyectos Globales
-                </Typography>
-              </div>
+              {hero.stats.map((stat, i) => (
+                <div key={i}>
+                  <Typography variant="h3" className="mb-2 font-sans font-light">
+                    {stat.value}
+                  </Typography>
+                  <Typography variant="small" className="text-neutral-400">
+                    {stat.label}
+                  </Typography>
+                </div>
+              ))}
             </div>
           </div>
           <div className="order-1 lg:order-2">
-            <div className="relative aspect-video bg-background overflow-hidden transition-all duration-500 border border-border/50 p-12 sm:p-16 hover:border-border group">
+            <div className="relative aspect-video bg-background overflow-hidden transition-all duration-500 border border-border/50 p-12 sm:p-16 hover:border-border group flex items-center justify-center">
               <img
-                src="/assets/logo2.svg"
+                src={hero.image}
                 className="w-full h-full object-contain transition-all duration-500 group-hover:scale-[1.02] dark:invert opacity-90 group-hover:opacity-100"
                 alt="Nosotros"
               />
@@ -95,12 +88,10 @@ export default function AboutPage() {
               variant="small"
               className="mb-6 block text-primary font-bold"
             >
-              Misión
+              {missionVision.mission.title}
             </Typography>
             <Typography variant="body" className="text-secondary font-light">
-              Preservar y evolucionar la tradición textil de Nariño mediante
-              procesos de alta ingeniería y diseño contemporáneo, elevando el
-              estándar de la moda colombiana en el escenario global.
+              {missionVision.mission.description}
             </Typography>
           </div>
           <div className="p-12 bg-card border border-border">
@@ -108,12 +99,10 @@ export default function AboutPage() {
               variant="small"
               className="mb-6 block text-primary font-bold"
             >
-              Visión
+              {missionVision.vision.title}
             </Typography>
             <Typography variant="body" className="text-secondary font-light">
-              Convertirnos en el referente principal de textiles premium y
-              sostenibles en Latinoamérica para el 2030, fusionando herencia
-              artesanal con innovación circular.
+              {missionVision.vision.description}
             </Typography>
           </div>
         </div>
@@ -126,75 +115,40 @@ export default function AboutPage() {
             variant="small"
             className="mb-6 block tracking-[0.3em] text-neutral-400"
           >
-            Proyección 2030
+            {innovation.subtitle}
           </Typography>
           <Typography variant="h2" className="mb-10">
-            Laboratorios de Innovación
+            {innovation.title}
           </Typography>
           <Typography
             variant="body"
             className="text-secondary font-light max-w-3xl mx-auto"
           >
-            Estamos invirtiendo en biotecnología textil y procesos
-            carbono-neutral para liderar la transición hacia una industria
-            textil consciente y transparente.
+            {innovation.description}
           </Typography>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div className="text-center group">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary group-hover:text-background transition-all duration-500">
-              <Cpu size={24} strokeWidth={1} />
+          {innovation.items.map((item) => (
+            <div key={item.id} className="text-center group">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary group-hover:text-background transition-all duration-500">
+                {item.id === "technology" && <Cpu size={24} strokeWidth={1} />}
+                {item.id === "circularity" && <Recycle size={24} strokeWidth={1} />}
+                {item.id === "social" && <Globe2 size={24} strokeWidth={1} />}
+              </div>
+              <Typography
+                variant="h3"
+                className="text-base mb-4 uppercase tracking-widest font-sans text-primary"
+              >
+                {item.title}
+              </Typography>
+              <Typography
+                variant="small"
+                className="text-neutral-500 leading-relaxed"
+              >
+                {item.description}
+              </Typography>
             </div>
-            <Typography
-              variant="h3"
-              className="text-base mb-4 uppercase tracking-widest font-sans text-primary"
-            >
-              Tecnología de Punta
-            </Typography>
-            <Typography
-              variant="small"
-              className="text-neutral-500 leading-relaxed"
-            >
-              Implementación de IA para optimización de patrones y reducción de
-              desperdicio.
-            </Typography>
-          </div>
-          <div className="text-center group">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary group-hover:text-background transition-all duration-500">
-              <Recycle size={24} strokeWidth={1} />
-            </div>
-            <Typography
-              variant="h3"
-              className="text-base mb-4 uppercase tracking-widest font-sans text-primary"
-            >
-              Circularidad Total
-            </Typography>
-            <Typography
-              variant="small"
-              className="text-neutral-500 leading-relaxed"
-            >
-              Sistemas de reciclaje de fibras post-industriales y tintura de
-              bajo impacto hídrico.
-            </Typography>
-          </div>
-          <div className="text-center group">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary group-hover:text-background transition-all duration-500">
-              <Globe2 size={24} strokeWidth={1} />
-            </div>
-            <Typography
-              variant="h3"
-              className="text-base mb-4 uppercase tracking-widest font-sans text-primary"
-            >
-              Impacto Social
-            </Typography>
-            <Typography
-              variant="small"
-              className="text-neutral-500 leading-relaxed"
-            >
-              Empoderamiento de comunidades locales mediante programas de
-              formación técnica especializada.
-            </Typography>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -203,73 +157,42 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <Typography variant="small" className="mb-4 text-neutral-400">
-              Ecosistema Digital
+              {social.subtitle}
             </Typography>
             <Typography variant="h2" className="text-white">
-              Conecta con el Archivo
+              {social.title}
             </Typography>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <a
-              href="#"
-              className="flex items-center gap-6 p-10 border border-white/10 hover:bg-white hover:text-black transition-all duration-500 group"
-            >
-              <Instagram size={20} strokeWidth={1} />
-              <div>
-                <Typography
-                  variant="small"
-                  className="group-hover:text-black text-white/70"
+            {social.items.map((item) => {
+               const Icon = item.iconName === "Instagram" ? Instagram : 
+                            item.iconName === "Linkedin" ? Linkedin : Facebook;
+               return (
+                <a
+                  key={item.id}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-6 p-10 border border-white/10 hover:bg-white hover:text-black transition-all duration-500 group"
                 >
-                  Instagram
-                </Typography>
-                <Typography
-                  variant="body"
-                  className="text-xs group-hover:text-black/60 text-white/50"
-                >
-                  @narinotex_archive
-                </Typography>
-              </div>
-            </a>
-            <a
-              href="#"
-              className="flex items-center gap-6 p-10 border border-white/10 hover:bg-white hover:text-black transition-all duration-500 group"
-            >
-              <Linkedin size={20} strokeWidth={1} />
-              <div>
-                <Typography
-                  variant="small"
-                  className="group-hover:text-black text-white/70"
-                >
-                  LinkedIn
-                </Typography>
-                <Typography
-                  variant="body"
-                  className="text-xs group-hover:text-black/60 text-white/50"
-                >
-                  NariñoTex Industrial
-                </Typography>
-              </div>
-            </a>
-            <a
-              href="#"
-              className="flex items-center gap-6 p-10 border border-white/10 hover:bg-white hover:text-black transition-all duration-500 group"
-            >
-              <Facebook size={20} strokeWidth={1} />
-              <div>
-                <Typography
-                  variant="small"
-                  className="group-hover:text-black text-white/70"
-                >
-                  Facebook
-                </Typography>
-                <Typography
-                  variant="body"
-                  className="text-xs group-hover:text-black/60 text-white/50"
-                >
-                  NariñoTex Oficial
-                </Typography>
-              </div>
-            </a>
+                  <Icon size={20} strokeWidth={1} />
+                  <div>
+                    <Typography
+                      variant="small"
+                      className="group-hover:text-black text-white/70"
+                    >
+                      {item.platform}
+                    </Typography>
+                    <Typography
+                      variant="body"
+                      className="text-xs group-hover:text-black/60 text-white/50"
+                    >
+                      {item.user}
+                    </Typography>
+                  </div>
+                </a>
+               )
+            })}
           </div>
         </div>
       </section>
@@ -281,44 +204,29 @@ export default function AboutPage() {
             variant="small"
             className="mb-6 block tracking-[0.3em] text-neutral-400"
           >
-            Red Global
+            {contact.subtitle}
           </Typography>
           <Typography variant="h2" className="mb-6">
-            Canales Directos
+            {contact.title}
           </Typography>
           <Typography
             variant="body"
             className="max-w-xl text-secondary font-light"
           >
-            Nuestro equipo corporativo brinda asesoría técnica personalizada
-            para proyectos de gran escala y colaboraciones exclusivas.
+            {contact.description}
           </Typography>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border border border-border overflow-hidden">
-          {[
-            {
-              icon: <Mail size={18} strokeWidth={1} />,
-              title: "Correo Corporativo",
-              val: "archivo@narinotex.com",
-            },
-            {
-              icon: <Phone size={18} strokeWidth={1} />,
-              title: "Línea Directa",
-              val: "+57 300 123 4567",
-            },
-            {
-              icon: <MapPin size={18} strokeWidth={1} />,
-              title: "Centro Operativo",
-              val: "C.C. Unicentro, Pasto",
-            },
-          ].map((item, i) => (
+          {contact.channels.map((item, i) => (
             <div
               key={i}
               className="flex flex-col items-center justify-center p-16 sm:p-24 bg-card hover:bg-muted transition-colors text-center group"
             >
               <div className="text-primary mb-10 group-hover:scale-110 transition-transform duration-500">
-                {item.icon}
+                {item.type === "email" && <Mail size={18} strokeWidth={1} />}
+                {item.type === "phone" && <Phone size={18} strokeWidth={1} />}
+                {item.type === "location" && <MapPin size={18} strokeWidth={1} />}
               </div>
               <Typography
                 variant="small"
@@ -330,7 +238,7 @@ export default function AboutPage() {
                 variant="body"
                 className="text-sm font-light text-primary"
               >
-                {item.val}
+                {item.value}
               </Typography>
             </div>
           ))}

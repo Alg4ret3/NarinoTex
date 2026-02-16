@@ -1,8 +1,8 @@
 import React from 'react';
 
-interface TypographyProps {
+interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'body' | 'small';
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   gradient?: boolean;
 }
@@ -11,7 +11,8 @@ export const Typography: React.FC<TypographyProps> = ({
   variant = 'body', 
   children, 
   className = '',
-  gradient = false
+  gradient = false,
+  ...props
 }) => {
   const styles = {
     h1: 'text-4xl sm:text-6xl md:text-8xl font-sans font-light tracking-tight text-primary editorial-spacing',
@@ -25,7 +26,10 @@ export const Typography: React.FC<TypographyProps> = ({
   const Component = variant.startsWith('h') ? (variant as React.ElementType) : 'p';
 
   return (
-    <Component className={`${styles[variant as keyof typeof styles]} ${gradient ? 'gradient-text' : ''} ${className}`}>
+    <Component 
+      className={`${styles[variant as keyof typeof styles]} ${gradient ? 'gradient-text' : ''} ${className}`}
+      {...props}
+    >
       {children}
     </Component>
   );

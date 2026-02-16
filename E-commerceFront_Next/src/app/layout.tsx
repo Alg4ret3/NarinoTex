@@ -17,6 +17,13 @@ export const metadata: Metadata = {
   description: "Líderes en la creación de textiles premium. Diseñamos con pasión desde Nariño para el mundo.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 import { ThemeProvider } from '@/context/ThemeContext';
 import { WhatsAppButton } from '@/components/atoms/WhatsAppButton';
 import { CartProvider } from '@/context/CartContext';

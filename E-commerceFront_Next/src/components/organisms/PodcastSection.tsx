@@ -1,11 +1,15 @@
 "use client";
+import React from "react";
 import { Typography } from "@/components/atoms/Typography";
 import { Button } from "@/components/atoms/Button";
 import { Mic, Youtube } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { SITE_CONTENT } from "@/constants/siteContent";
 
 export function PodcastSection({ className }: { className?: string }) {
+  const { title, subtitle, description, youtubeLink, buttonText, cover } = SITE_CONTENT.home.podcastSection;
+
   return (
     <section className={cn("relative py-24 sm:py-32 bg-section-dark text-foreground overflow-hidden", className)}>
       {/* Background Pattern */}
@@ -19,23 +23,21 @@ export function PodcastSection({ className }: { className?: string }) {
           <div className="flex items-center gap-3 mb-6 text-primary">
             <Mic size={20} />
             <Typography variant="small" className="tracking-[0.3em] font-bold">
-              NariñoTex ON AIR
+              {subtitle}
             </Typography>
           </div>
           
-          <Typography variant="h2" className="text-4xl sm:text-6xl font-serif mb-8 text-foreground">
-            Voces del <br /> Tejido Ancestral
-          </Typography>
+          <Typography variant="h2" className="text-4xl sm:text-6xl font-serif mb-8 text-foreground" dangerouslySetInnerHTML={{ __html: title.replace(' <br /> ', '<br />') }} />
           
           <Typography variant="body" className="text-secondary font-light text-lg mb-10 max-w-xl leading-relaxed">
-            Sumérgete en conversaciones profundas con artesanos, diseñadores y visionarios que están redefiniendo la industria textil desde los Andes para el mundo.
+            {description}
           </Typography>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="https://youtube.com/@narinotex?si=NPUDo7dgxIEy_nUK" target="_blank" rel="noopener noreferrer" className="inline-block">
+            <Link href={youtubeLink} target="_blank" rel="noopener noreferrer" className="inline-block">
                 <Button size="lg" className="w-full sm:w-auto bg-primary text-background hover:bg-primary/90 border-none gap-3">
                 <Youtube size={18} />
-                Mira los Videos en el Canal
+                {buttonText}
                 </Button>
             </Link>
           </div>
@@ -45,7 +47,7 @@ export function PodcastSection({ className }: { className?: string }) {
              {/* Abstract Visual for Podcast Cover */}
             <div className="relative aspect-square md:aspect-[0.8] bg-neutral-200 dark:bg-neutral-800 border border-border p-8 flex flex-col justify-end overflow-hidden group">
                 <img 
-                    src="https://cdn.jsdelivr.net/gh/Alg4ret3/StaticEcommerce@main/Home/ContentPodcast.webp" 
+                    src={cover.image} 
                     alt="Podcast Cover" 
                     className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-700"
                 />
@@ -53,13 +55,13 @@ export function PodcastSection({ className }: { className?: string }) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                 <div className="relative z-10 transition-transform duration-700 group-hover:-translate-y-4">
                      <span className="inline-block px-3 py-1 bg-primary text-background text-[10px] font-bold uppercase tracking-widest mb-4">
-                        Episodio #02
+                        {cover.episode}
                      </span>
                      <Typography variant="h3" className="text-2xl sm:text-3xl font-serif text-white mb-2">
-                        &quot;Vision y Desarrollo&quot;
+                        {cover.episodeTitle}
                      </Typography>
                      <Typography variant="body" className="text-white text-sm">
-                        Con Arturo Ortega, Director Camara de comercio de Pasto
+                        {cover.guest}
                      </Typography>
                 </div>
             </div>
