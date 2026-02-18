@@ -38,7 +38,11 @@ export async function medusaFetch<T>(
     }
 
     const text = await res.text();
-    return (text ? JSON.parse(text) : {}) as T;
+    try {
+      return text ? JSON.parse(text) : ({} as T);
+    } catch {
+      return {} as T;
+    }
   } catch (error: any) {
     if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
       throw new Error(`No se pudo conectar con el servidor en ${MEDUSA_BACKEND_URL}. ¿Está el backend corriendo?`);
