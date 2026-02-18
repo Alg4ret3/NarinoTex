@@ -1,57 +1,65 @@
 import { AbstractNotificationProviderService } from "@medusajs/framework/utils"
 import { Resend } from "resend"
+import path from 'path';
+import fs from 'fs';
 
 type InjectedDependencies = {
-    logger: any
+  logger: any
 }
 
 type Options = {
-    api_key: string
-    from: string
+  api_key: string
+  from: string
 }
 
+const logoPath = path.join(process.cwd(), "static/logo.png");
+const logoBuffer = fs.readFileSync(logoPath);
+
 class ResendNotificationProviderService extends AbstractNotificationProviderService {
-    static identifier = "resend"
+  static identifier = "resend"
 
-    protected resend: Resend
-    protected options_: Options
-    protected logger_
+  protected resend: Resend
+  protected options_: Options
+  protected logger_
 
-    constructor(
-        { logger }: InjectedDependencies,
-        options: Options
-    ) {
-        super()
+  constructor(
+    { logger }: InjectedDependencies,
+    options: Options
+  ) {
+    super()
 
-        this.logger_ = logger
-        this.options_ = options
+    this.logger_ = logger
+    this.options_ = options
 
-        this.resend = new Resend(this.options_.api_key)
-    }
+    this.resend = new Resend(this.options_.api_key)
+  }
 
-    async send(notification) {
-        const { to, data, template } = notification
+  async send(notification) {
+    const { to, data, template } = notification
 
-        if (template === "password-reset") {
-            const resetLink = `${process.env.STORE_URL}/auth/reset-password?email=${data.email}&token=${data.token}`
+    if (template === "password-reset") {
+      const resetLink = `${process.env.STORE_URL}/auth/reset-password?email=${data.email}&token=${data.token}`
 
-            await this.resend.emails.send({
-                from: this.options_.from,
-                to,
-                subject: "Restablecer tu contraseña",
-                html: `
+      await this.resend.emails.send({
+        from: this.options_.from,
+        to,
+        subject: "Restablecer tu contraseña",
+        html: `
 <body style="margin:0; padding:0; background-color:#f4f4f7; font-family:Arial, sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f7; padding:40px 0;">
     <tr>
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:8px; padding:40px;">
           
-          <!-- Logo / Nombre -->
-          <tr>
-            <td align="center" style="padding-bottom:20px;">
-              <h1 style="margin:0; color:#111827;">NariñoTex</h1>
-            </td>
-          </tr>
+          <!-- LOGO -->
+          <div style="text-align:center; margin-bottom: 20px;">
+              <img 
+                src="cid:logo@narino"
+                alt="NariñoTex"
+                width="225"
+                style="display:block; margin:0 auto;"
+              />
+          </div>
 
           <!-- Título -->
           <tr>
@@ -124,11 +132,19 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
   </table>
 </body>
 `,
-            })
-        }
-
-        return {}
+        attachments: [
+          {
+            filename: 'logo.png',
+            content: logoBuffer.toString('base64'),
+            contentType: 'image/png',
+            contentId: 'logo@narino'
+          }
+        ]
+      })
     }
+
+    return {}
+  }
 }
 
 export default ResendNotificationProviderService

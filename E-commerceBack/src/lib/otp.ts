@@ -1,5 +1,7 @@
 import { Resend } from 'resend';
 import Redis from 'ioredis';
+import path from 'path';
+import fs from 'fs';
 
 // TODO: Inject config properly or use environment variables directly
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
@@ -8,6 +10,9 @@ const resendApiKey = process.env.RESEND_API_KEY;
 // Use a singleton pattern or export functions to avoid multiple connections if not using DI
 const redis = new Redis(redisUrl);
 const resend = new Resend(resendApiKey);
+
+const logoPath = path.join(process.cwd(), "static/logo.png");
+const logoBuffer = fs.readFileSync(logoPath);
 
 export const OtpService = {
     async generate(email: string): Promise<string> {
@@ -37,12 +42,23 @@ export const OtpService = {
                     border-radius: 10px;
                     padding: 24px;
                 ">
+
+                    <!-- LOGO -->
+                    <div style="text-align:center; margin-bottom: 20px;">
+                        <img 
+                            src="cid:logo@narino"
+                            alt="NariñoTex"
+                            width="225"
+                            style="display:block; margin:0 auto;"
+                        />
+                    </div>
+
                     <h2 style="margin-bottom: 16px; font-size: 22px;">
-                    Verify your email
+                    Verifica tu correo electrónico
                     </h2>
 
                     <p style="margin-bottom: 16px; font-size: 14px; color: #374151;">
-                    Use the verification code below to continue:
+                    Utilice el código de verificación a continuación para continuar:
                     </p>
 
                     <div style="
@@ -63,7 +79,7 @@ export const OtpService = {
                     </div>
 
                     <p style="font-size: 13px; color: #6b7280;">
-                    This code expires in <strong>10 minutes</strong>.
+                    Este código caduca en <strong>10 minutos</strong>.
                     </p>
 
                     <hr style="
@@ -73,10 +89,18 @@ export const OtpService = {
                     " />
 
                     <p style="font-size: 12px; color: #9ca3af;">
-                    If you didn’t request this email, you can safely ignore it.
+                    Si no solicitó este correo electrónico, puede ignorarlo con seguridad.
                     </p>
                 </div>
-                `
+                `,
+                attachments: [
+                    {
+                        filename: 'logo.png',
+                        content: logoBuffer.toString('base64'),
+                        contentType: 'image/png',
+                        contentId: 'logo@narino'
+                    }
+                ]
             });
         } catch (error) {
             console.error('Failed to send email:', error);
