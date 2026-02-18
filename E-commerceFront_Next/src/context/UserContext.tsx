@@ -111,7 +111,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const { customer, token } = await loginCustomer(data);
 
-    // 🔥 Guardar token
+ 
     localStorage.setItem("auth_token", token);
 
     setUser(customerToUser(customer));
