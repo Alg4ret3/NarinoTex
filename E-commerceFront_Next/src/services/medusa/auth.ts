@@ -19,6 +19,19 @@ export interface CustomerData {
     last_name: string;
     phone?: string;
     has_account: boolean;
+    shipping_addresses: Array<{
+        id: string;
+        first_name: string | null;
+        last_name: string | null;
+        address_1: string | null;
+        address_2: string | null;
+        city: string | null;
+        country_code: string | null;
+        province: string | null;
+        postal_code: string | null;
+        phone: string | null;
+        metadata: Record<string, unknown> | null;
+    }>;
     created_at: string;
     updated_at: string;
 }

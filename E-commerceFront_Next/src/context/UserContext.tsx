@@ -1,19 +1,19 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import {
-  registerCustomer,
-  loginCustomer,
-  logoutCustomer,
-  getCurrentCustomer,
-  updateCustomer as updateCustomerService,
-  sendOtp as sendOtpService,
-  verifyOtp as verifyOtpService,
-  requestPasswordReset as requestPasswordResetService,
-  updatePasswordWithToken as updatePasswordWithTokenService,
-  type RegisterData,
-  type LoginData,
-  type CustomerData
+import { 
+  registerCustomer, 
+  loginCustomer, 
+  logoutCustomer, 
+  getCurrentCustomer, 
+  updateCustomer as updateCustomerService, 
+  sendOtp as sendOtpService, 
+  verifyOtp as verifyOtpService, 
+  requestPasswordReset as requestPasswordResetService, 
+  updatePasswordWithToken as updatePasswordWithTokenService, 
+  type RegisterData, 
+  type LoginData, 
+  type CustomerData 
 } from '@/services/medusa';
 
 export interface Address {
@@ -22,7 +22,14 @@ export interface Address {
   street: string;
   city: string;
   country: string;
+  province?: string;
+  postalCode?: string;
+  apartment?: string;
   isDefault: boolean;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  company?: string;
 }
 
 export interface User {
@@ -32,7 +39,6 @@ export interface User {
   phone: string;
   firstName: string;
   lastName: string;
-  addresses: Address[];
   isLoggedIn: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -48,9 +54,6 @@ interface UserContextType {
   verifyOtp: (email: string, code: string) => Promise<{ verified: boolean }>;
   logout: () => Promise<void>;
   updateProfile: (data: Partial<Pick<User, 'firstName' | 'lastName' | 'phone'>>) => Promise<void>;
-  addAddress: (address: Omit<Address, 'id'>) => void;
-  removeAddress: (id: string) => void;
-  setDefaultAddress: (id: string) => void;
   clearError: () => void;
   requestPasswordReset: (email: string) => Promise<void>;
   resetPassword: (email: string, token: string, password: string) => Promise<void>;
@@ -69,7 +72,6 @@ function customerToUser(customer: CustomerData): User {
     phone: customer.phone || '',
     firstName: customer.first_name,
     lastName: customer.last_name,
-    addresses: [], // TODO: Fetch addresses from Medusa
     isLoggedIn: true,
     createdAt: customer.created_at,
     updatedAt: customer.updated_at,
@@ -198,41 +200,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Local address management (TODO: integrate with Medusa addresses)
-  const addAddress = (address: Omit<Address, 'id'>) => {
-    if (!user) return;
-
-    const newAddress = { ...address, id: Math.random().toString(36).substr(2, 9) };
-    setUser({
-      ...user,
-      addresses: [...user.addresses, newAddress]
-    });
-  };
-
-  const removeAddress = (id: string) => {
-    if (!user) return;
-
-    setUser({
-      ...user,
-      addresses: user.addresses.filter(a => a.id !== id)
-    });
-  };
-
-  const setDefaultAddress = (id: string) => {
-    if (!user) return;
-
-    setUser({
-      ...user,
-      addresses: user.addresses.map(a => ({
-        ...a,
-        isDefault: a.id === id
-      }))
-    });
-  };
-
   const clearError = () => {
     setError(null);
   };
+
 
   const requestPasswordReset = async (email: string) => {
     try {
@@ -280,9 +251,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       verifyOtp,
       logout,
       updateProfile,
-      addAddress,
-      removeAddress,
-      setDefaultAddress,
       clearError,
       requestPasswordReset,
       resetPassword

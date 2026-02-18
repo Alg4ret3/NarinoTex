@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Navbar } from "@/components/organisms/Navbar";
 import { Footer } from "@/components/organisms/Footer";
 import { Typography } from "@/components/atoms/Typography";
@@ -16,7 +16,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useUser } from "@/context/UserContext";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { resetPassword, isLoading, error, clearError } = useUser();
@@ -75,11 +75,7 @@ export default function ResetPasswordPage() {
   const strengthLabel = ["Muy débil", "Débil", "Aceptable", "Fuerte", "Muy fuerte"][score];
 
   return (
-    <main className="min-h-screen bg-background pt-24">
-      <Navbar />
-
-      <div className="max-w-3xl mx-auto px-6 py-20">
-        <div className="bg-card border border-border shadow-xl p-12">
+    <div className="bg-card border border-border shadow-xl p-12">
 
           <div className="mb-10">
             <Typography variant="small" className="text-neutral-400 uppercase tracking-widest">
@@ -207,6 +203,22 @@ export default function ResetPasswordPage() {
             </form>
           )}
         </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <main className="min-h-screen bg-background pt-24">
+      <Navbar />
+
+      <div className="max-w-3xl mx-auto px-6 py-20">
+        <Suspense fallback={
+          <div className="flex items-center justify-center p-20">
+            <Typography variant="body">Cargando...</Typography>
+          </div>
+        }>
+          <ResetPasswordForm />
+        </Suspense>
       </div>
 
       <Footer />
