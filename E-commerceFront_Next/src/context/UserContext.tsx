@@ -6,6 +6,8 @@ import {
   loginCustomer, 
   logoutCustomer, 
   getCurrentCustomer, 
+  createCustomerAddress,
+  listCustomerAddresses,
   updateCustomer as updateCustomerService, 
   sendOtp as sendOtpService, 
   verifyOtp as verifyOtpService, 
@@ -40,6 +42,7 @@ export interface User {
   firstName: string;
   lastName: string;
   isLoggedIn: boolean;
+  addresses: Address[];
   createdAt?: string;
   updatedAt?: string;
 }
@@ -57,14 +60,44 @@ interface UserContextType {
   clearError: () => void;
   requestPasswordReset: (email: string) => Promise<void>;
   resetPassword: (email: string, token: string, password: string) => Promise<void>;
+  createAddress: (data: CreateAddressInput) => Promise<void>;
+  listAddresses: () => Promise<void>;
+}
+
+interface CreateAddressInput {
+  addressName: string;
+  firstName: string;
+  lastName: string;
+  street: string;
+  city: string;
+  country: string;
+  province?: string;
+  postalCode?: string;
+  phone?: string;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
+
 
 /**
  * Convert Medusa CustomerData to User format
  */
 function customerToUser(customer: CustomerData): User {
+  const addresses: Address[] = (customer.shipping_addresses || []).map(addr => ({
+    id: addr.id,
+    label: (addr as any).address_name || (addr.metadata?.label as string) || 'Dirección',
+    street: addr.address_1 || '',
+    city: addr.city || '',
+    country: addr.country_code || '',
+    province: addr.province || '',
+    postalCode: addr.postal_code || '',
+    apartment: addr.address_2 || '',
+    isDefault: false, // Could be enhanced by checking customer.shipping_address_id
+    firstName: addr.first_name || '',
+    lastName: addr.last_name || '',
+    phone: addr.phone || '',
+  }));
+
   return {
     id: customer.id,
     name: `${customer.first_name} ${customer.last_name}`,
@@ -73,6 +106,7 @@ function customerToUser(customer: CustomerData): User {
     firstName: customer.first_name,
     lastName: customer.last_name,
     isLoggedIn: true,
+    addresses,
     createdAt: customer.created_at,
     updatedAt: customer.updated_at,
   };
@@ -200,6 +234,50 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const createAddress = async (data: CreateAddressInput) => {
+  try {
+    setIsLoading(true);
+    setError(null);
+
+    const response = await createCustomerAddress({
+      address_name: data.addressName,
+      first_name: data.firstName,
+      last_name: data.lastName,
+      address_1: data.street,
+      city: data.city,
+      country_code: data.country.toLowerCase(),
+      province: data.province,
+      postal_code: data.postalCode,
+      phone: data.phone,
+    });
+
+    if (response.customer) {
+      setUser(customerToUser(response.customer));
+    }
+
+  } catch (err: any) {
+    setError(err.message || "Error al crear dirección");
+    throw err;
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  const listAddresses = async () => {
+    try {
+      setIsLoading(true);
+      const response = await listCustomerAddresses();
+      if (response.customer) {
+        setUser(customerToUser(response.customer));
+      }
+    } catch (err: any) {
+      setError(err.message || "Error al cargar direcciones");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const clearError = () => {
     setError(null);
   };
@@ -251,6 +329,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       verifyOtp,
       logout,
       updateProfile,
+      createAddress,
+      listAddresses,
       clearError,
       requestPasswordReset,
       resetPassword
