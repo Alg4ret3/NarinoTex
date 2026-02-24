@@ -5,10 +5,10 @@ import { Navbar } from '@/components/organisms/Navbar';
 import { Footer } from '@/components/organisms/Footer';
 import { Typography } from '@/components/atoms/Typography';
 import { Button } from '@/components/atoms/Button';
+import { ColombiaLocationSelect } from '@/components/molecules/ColombiaLocationSelect';
 import { useUser } from '@/context/UserContext';
 import { User, Phone, MapPin, Plus, X, Check } from 'lucide-react';
 import { withAuth } from '@/components/hoc/withAuth';
-
 import type { Address } from '@/context/UserContext';
 
 function ProfilePage() {
@@ -384,28 +384,17 @@ function ProfilePage() {
                         <div className="absolute bottom-0 left-0 w-full h-[1px] bg-[#D4AF37] scale-x-0 peer-focus:scale-x-100 transition-transform duration-300 origin-left"></div>
                       </div>
 
-                      {/* Ciudad y Departamento */}
-                      <div className="space-y-1 relative group">
-                        <label className={labelClass}>Ciudad *</label>
-                        <input
-                          required
-                          type="text"
-                          value={addressForm.city}
-                          onChange={(e) => setAddressForm({ ...addressForm, city: e.target.value })}
-                          className={`${inputClass} mt-2`}
-                        />
-                        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-[#D4AF37] scale-x-0 peer-focus:scale-x-100 transition-transform duration-300 origin-left"></div>
-                      </div>
-                      <div className="space-y-1 relative group">
-                        <label className={labelClass}>Departamento</label>
-                        <input
-                          type="text"
-                          value={addressForm.province}
-                          onChange={(e) => setAddressForm({ ...addressForm, province: e.target.value })}
-                          className={`${inputClass} mt-2`}
-                        />
-                        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-[#D4AF37] scale-x-0 peer-focus:scale-x-100 transition-transform duration-300 origin-left"></div>
-                      </div>
+                      {/* Ciudad y Departamento — selector en cascada */}
+                      <ColombiaLocationSelect
+                        departamento={addressForm.province}
+                        ciudad={addressForm.city}
+                        onDepartamentoChange={(val) =>
+                          setAddressForm((prev) => ({ ...prev, province: val, city: '' }))
+                        }
+                        onCiudadChange={(val) =>
+                          setAddressForm((prev) => ({ ...prev, city: val }))
+                        }
+                      />
 
                       {/* Código postal y Teléfono */}
                       <div className="space-y-1 relative group">
