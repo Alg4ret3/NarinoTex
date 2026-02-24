@@ -1,21 +1,22 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  registerCustomer, 
-  loginCustomer, 
-  logoutCustomer, 
-  getCurrentCustomer, 
+import {
+  registerCustomer,
+  loginCustomer,
+  logoutCustomer,
+  getCurrentCustomer,
   createCustomerAddress,
   listCustomerAddresses,
-  updateCustomer as updateCustomerService, 
-  sendOtp as sendOtpService, 
-  verifyOtp as verifyOtpService, 
-  requestPasswordReset as requestPasswordResetService, 
-  updatePasswordWithToken as updatePasswordWithTokenService, 
-  type RegisterData, 
-  type LoginData, 
-  type CustomerData 
+  deleteCustomerAddress,
+  updateCustomer as updateCustomerService,
+  sendOtp as sendOtpService,
+  verifyOtp as verifyOtpService,
+  requestPasswordReset as requestPasswordResetService,
+  updatePasswordWithToken as updatePasswordWithTokenService,
+  type RegisterData,
+  type LoginData,
+  type CustomerData
 } from '@/services/medusa';
 
 export interface Address {
@@ -62,6 +63,7 @@ interface UserContextType {
   resetPassword: (email: string, token: string, password: string) => Promise<void>;
   createAddress: (data: CreateAddressInput) => Promise<void>;
   listAddresses: () => Promise<void>;
+  deleteAddress: (addressId: string) => Promise<void>;
 }
 
 interface CreateAddressInput {
@@ -83,26 +85,29 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
  * Convert Medusa CustomerData to User format
  */
 function customerToUser(customer: CustomerData): User {
-  const addresses: Address[] = (customer.shipping_addresses || []).map(addr => ({
+  const addresses: Address[] = (customer.addresses || []).map(addr => ({
     id: addr.id,
-    label: (addr as any).address_name || (addr.metadata?.label as string) || 'Dirección',
-    street: addr.address_1 || '',
-    city: addr.city || '',
-    country: addr.country_code || '',
-    province: addr.province || '',
-    postalCode: addr.postal_code || '',
-    apartment: addr.address_2 || '',
-    isDefault: false, // Could be enhanced by checking customer.shipping_address_id
-    firstName: addr.first_name || '',
-    lastName: addr.last_name || '',
-    phone: addr.phone || '',
+    label:
+      (addr as any).address_name ||
+      (addr.metadata?.label as string) ||
+      "Dirección",
+    street: addr.address_1 || "",
+    city: addr.city || "",
+    country: addr.country_code || "",
+    province: addr.province || "",
+    postalCode: addr.postal_code || "",
+    apartment: addr.address_2 || "",
+    isDefault: false, // opcional: mejorar luego
+    firstName: addr.first_name || "",
+    lastName: addr.last_name || "",
+    phone: addr.phone || "",
   }));
 
   return {
     id: customer.id,
     name: `${customer.first_name} ${customer.last_name}`,
     email: customer.email,
-    phone: customer.phone || '',
+    phone: customer.phone || "",
     firstName: customer.first_name,
     lastName: customer.last_name,
     isLoggedIn: true,
@@ -139,23 +144,23 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (data: LoginData) => {
-  try {
-    setIsLoading(true);
-    setError(null);
+    try {
+      setIsLoading(true);
+      setError(null);
 
-    const { customer, token } = await loginCustomer(data);
+      const { customer, token } = await loginCustomer(data);
 
- 
-    localStorage.setItem("auth_token", token);
 
-    setUser(customerToUser(customer));
-  } catch (err: any) {
-    setError(err.message || "Error al iniciar sesión");
-    throw err;
-  } finally {
-    setIsLoading(false);
-  }
-};
+      localStorage.setItem("auth_token", token);
+
+      setUser(customerToUser(customer));
+    } catch (err: any) {
+      setError(err.message || "Error al iniciar sesión");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
 
   const register = async (data: RegisterData) => {
@@ -235,33 +240,31 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const createAddress = async (data: CreateAddressInput) => {
-  try {
-    setIsLoading(true);
-    setError(null);
+    try {
+      setIsLoading(true);
+      setError(null);
 
-    const response = await createCustomerAddress({
-      address_name: data.addressName,
-      first_name: data.firstName,
-      last_name: data.lastName,
-      address_1: data.street,
-      city: data.city,
-      country_code: data.country.toLowerCase(),
-      province: data.province,
-      postal_code: data.postalCode,
-      phone: data.phone,
-    });
+      await createCustomerAddress({
+        address_name: data.addressName,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        address_1: data.street,
+        city: data.city,
+        country_code: data.country.toLowerCase(),
+        province: data.province,
+        postal_code: data.postalCode,
+        phone: data.phone,
+      });
 
-    if (response.customer) {
-      setUser(customerToUser(response.customer));
+      await listAddresses(); // 🔥 sincronización real
+
+    } catch (err: any) {
+      setError(err.message || "Error al crear dirección");
+      throw err;
+    } finally {
+      setIsLoading(false);
     }
-
-  } catch (err: any) {
-    setError(err.message || "Error al crear dirección");
-    throw err;
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   const listAddresses = async () => {
     try {
@@ -282,6 +285,30 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setError(null);
   };
 
+  const deleteAddress = async (addressId: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      await deleteCustomerAddress(addressId);
+
+      // 🔥 Opción profesional: refrescar desde backend
+      await listAddresses();
+
+      // ⚡ Alternativa rápida (optimista):
+      // setUser(prev =>
+      //   prev
+      //     ? { ...prev, addresses: prev.addresses.filter(a => a.id !== addressId) }
+      //     : prev
+      // );
+
+    } catch (err: any) {
+      setError(err.message || "Error al eliminar dirección");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const requestPasswordReset = async (email: string) => {
     try {
@@ -331,6 +358,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateProfile,
       createAddress,
       listAddresses,
+      deleteAddress,
       clearError,
       requestPasswordReset,
       resetPassword

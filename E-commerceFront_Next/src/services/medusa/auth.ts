@@ -19,7 +19,7 @@ export interface CustomerData {
     last_name: string;
     phone?: string;
     has_account: boolean;
-    shipping_addresses: Array<{
+    addresses: Array<{
         id: string;
         first_name: string | null;
         last_name: string | null;
