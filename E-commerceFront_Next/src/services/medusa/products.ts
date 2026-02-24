@@ -1,7 +1,7 @@
 import { medusaFetch } from "./client"
 
-const BOLETERIA_COLLECTION_ID = process.env.BOLETERIA_COLLECTION_ID
-const STANDS_COLLECTION_ID = process.env.STANDS_COLLECTION_ID
+const BOLETERIA_COLLECTION_ID = "pcol_01KJ8R2WRZH06BM8AS1YG6GXAK"
+const STANDS_COLLECTION_ID = "pcol_01KJ8R3DMQGPARHWVTKV18N0M0"
 
 interface MedusaPrice {
   amount: number
@@ -33,17 +33,8 @@ interface MedusaProductsResponse {
 }
 
 export async function getProductsByCollection(collectionId: string) {
-  if (!collectionId) {
-    throw new Error("Collection ID no está configurado en las variables de entorno.")
-  }
-
   const data = await medusaFetch<MedusaProductsResponse>(
-    "/store/products",
-    {},
-    {
-      "collection_id[]": collectionId,
-      expand: "variants,variants.prices,collection",
-    }
+    `/store/products?collection_id[]=${collectionId}&fields=*variants,*variants.prices,*collection`
   )
 
   return data.products
