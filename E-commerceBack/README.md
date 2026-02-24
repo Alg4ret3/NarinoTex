@@ -1,76 +1,112 @@
+# 🧶 NariñoTex - Backend API
+
+![Medusa](https://img.shields.io/badge/v2.0-MedusaJS-blueviolet?style=for-the-badge&logo=medusa)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+
+Bienvenido al motor de comercio electrónico de **NariñoTex**, construido sobre la potente arquitectura de **MedusaJS v2**. Este backend gestiona la lógica de negocio, productos, pedidos, autenticación y flujos de trabajo personalizados para la plataforma.
+
+---
+
+## 🚀 Características Principales
+
+- **Arquitectura Modular:** Basada en Medusa 2.0 para una máxima flexibilidad.
+- **Flujos de Trabajo (Workflows):** Automatización de procesos de negocio complejos.
+- **Sistema de Suscriptores:** Manejo de eventos asíncronos para integraciones (ej. correos, inventario).
+- **Notificaciones Avanzadas:** Integración con **Resend** para comunicaciones con el cliente.
+- **Admin Dashboard:** Panel de administración personalizado para la gestión de la tienda.
+
+## 🛠️ Stack Tecnológico
+
+- **Core:** [MedusaJS v2](https://docs.medusajs.com/)
+- **Lenguaje:** TypeScript
+- **Base de Datos:** PostgreSQL
+- **Caché/Eventos:** Redis
+- **Emails:** Resend
+- **Gestor de Paquetes:** pnpm
+
+---
+
+## ⚙️ Configuración del Proyecto
+
+### 1. Requisitos Previos
+
+- **Node.js:** v20 o superior.
+- **PostgreSQL:** Una instancia activa.
+- **Redis:** Requerido para tareas en segundo plano y caché.
+- **pnpm:** Instalado globalmente (`npm install -g pnpm`).
+
+### 2. Instalación
+
+Clona el repositorio y ejecuta:
+
+```bash
+pnpm install
+```
+
+### 3. Variables de Entorno
+
+Copia el archivo de plantilla y configura tus credenciales:
+
+```bash
+cp .env.template .env
+```
+
+Asegúrate de configurar:
+- `DATABASE_URL`: Conexión a tu base de datos PostgreSQL.
+- `REDIS_URL`: Conexión a tu instancia de Redis.
+- `RESEND_API_KEY`: Para el envío de correos.
+
+### 4. Inicialización de la Base de Datos
+
+Ejecuta las migraciones y carga los datos iniciales:
+
+```bash
+# Ejecutar migraciones
+npx medusa db:migrate
+
+# Cargar datos de prueba (opcional)
+pnpm run seed
+```
+
+---
+
+## 🧑‍💻 Desarrollo
+
+Para iniciar el servidor en modo desarrollo con hot-reload:
+
+```bash
+pnpm run dev
+```
+
+El servidor estará disponible en `http://localhost:9000`.
+
+### Scripts Disponibles
+
+- `pnpm run build`: Compila el proyecto para producción.
+- `pnpm run start`: Inicia el servidor compilado.
+- `pnpm run test:unit`: Ejecuta las pruebas unitarias.
+- `pnpm run test:integration:http`: Ejecuta pruebas de integración de API.
+
+---
+
+## 📂 Estructura del Directorio
+
+- `/src/admin`: Extensiones y personalizaciones del panel de administración.
+- `/src/api`: Endpoints personalizados de la API.
+- `/src/modules`: Módulos de comercio personalizados.
+- `/src/subscribers`: Manejadores de eventos (side effects).
+- `/src/workflows`: Definiciones de orquestación de procesos.
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia MIT.
+
+---
+
 <p align="center">
-  <a href="https://www.medusajs.com">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/59018053/229103275-b5e482bb-4601-46e6-8142-244f531cebdb.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/59018053/229103726-e5b529a3-9b3f-4970-8a1f-c6af37f087bf.svg">
-    <img alt="Medusa logo" src="https://user-images.githubusercontent.com/59018053/229103726-e5b529a3-9b3f-4970-8a1f-c6af37f087bf.svg">
-    </picture>
-  </a>
+  Hecho con ❤️ para NariñoTex
 </p>
-<h1 align="center">
-  Medusa
-</h1>
-
-<h4 align="center">
-  <a href="https://docs.medusajs.com">Documentation</a> |
-  <a href="https://www.medusajs.com">Website</a>
-</h4>
-
-<p align="center">
-  Building blocks for digital commerce
-</p>
-<p align="center">
-  <a href="https://github.com/medusajs/medusa/blob/master/CONTRIBUTING.md">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" alt="PRs welcome!" />
-  </a>
-    <a href="https://www.producthunt.com/posts/medusa"><img src="https://img.shields.io/badge/Product%20Hunt-%231%20Product%20of%20the%20Day-%23DA552E" alt="Product Hunt"></a>
-  <a href="https://discord.gg/xpCwq3Kfn8">
-    <img src="https://img.shields.io/badge/chat-on%20discord-7289DA.svg" alt="Discord Chat" />
-  </a>
-  <a href="https://twitter.com/intent/follow?screen_name=medusajs">
-    <img src="https://img.shields.io/twitter/follow/medusajs.svg?label=Follow%20@medusajs" alt="Follow @medusajs" />
-  </a>
-</p>
-
-## Compatibility
-
-This starter is compatible with versions >= 2 of `@medusajs/medusa`. 
-
-## Getting Started
-
-Visit the [Quickstart Guide](https://docs.medusajs.com/learn/installation) to set up a server.
-
-Visit the [Docs](https://docs.medusajs.com/learn/installation#get-started) to learn more about our system requirements.
-
-## What is Medusa
-
-Medusa is a set of commerce modules and tools that allow you to build rich, reliable, and performant commerce applications without reinventing core commerce logic. The modules can be customized and used to build advanced ecommerce stores, marketplaces, or any product that needs foundational commerce primitives. All modules are open-source and freely available on npm.
-
-Learn more about [Medusa’s architecture](https://docs.medusajs.com/learn/introduction/architecture) and [commerce modules](https://docs.medusajs.com/learn/fundamentals/modules/commerce-modules) in the Docs.
-
-## Build with AI Agents
-
-### Claude Code Plugin
-
-If you use AI agents like Claude Code, check out the [medusa-dev Claude Code plugin](https://github.com/medusajs/medusa-claude-plugins).
-
-### Other Agents
-
-If you use AI agents other than Claude Code, copy the [skills directory](https://github.com/medusajs/medusa-claude-plugins/tree/main/plugins/medusa-dev/skills) into your agent's relevant `skills` directory.
-
-### MCP Server
-
-You can also add the MCP server `https://docs.medusajs.com/mcp` to your AI agents to answer questions related to Medusa. The `medusa-dev` Claude Code plugin includes this MCP server by default.
-
-## Community & Contributions
-
-The community and core team are available in [GitHub Discussions](https://github.com/medusajs/medusa/discussions), where you can ask for support, discuss roadmap, and share ideas.
-
-Join our [Discord server](https://discord.com/invite/medusajs) to meet other community members.
-
-## Other channels
-
-- [GitHub Issues](https://github.com/medusajs/medusa/issues)
-- [Twitter](https://twitter.com/medusajs)
-- [LinkedIn](https://www.linkedin.com/company/medusajs)
-- [Medusa Blog](https://medusajs.com/blog/)

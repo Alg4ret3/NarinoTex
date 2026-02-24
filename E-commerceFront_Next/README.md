@@ -1,38 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 👕 NariñoTex - Storefront
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-15+-black?style=for-the-badge&logo=next.js&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-black?style=for-the-badge&logo=framer&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 
-First, run the development server:
+Esta es la interfaz de usuario moderna y responsiva de **NariñoTex**, construida con **Next.js** y optimizada para ofrecer una experiencia de compra premium. Se conecta al backend de MedusaJS para gestionar el catálogo y las ventas.
+
+---
+
+## ✨ Características Destacadas
+
+- **Diseño Premium:** Estética moderna con micro-animaciones fluidas gracias a **Framer Motion**.
+- **Rendimiento Óptimo:** Aprovechamiento del **App Router** y Server Components de Next.js.
+- **Tailwind CSS v4:** Estilos de última generación con la versión más reciente de Tailwind.
+- **Responsive Design:** Adaptado para una navegación impecable en móviles, tablets y escritorio.
+- **Integración Nativa:** Conexión fluida con el backend mediante el SDK de Medusa.
+
+## 🛠️ Stack Tecnológico
+
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Estilos:** Tailwind CSS v4
+- **Animaciones:** Framer Motion
+- **Iconos:** Lucide React
+- **Lenguaje:** TypeScript
+- **Gestión de Estado/Datos:** Medusa JS SDK
+- **Gestor de Paquetes:** pnpm
+
+---
+
+## ⚙️ Configuración del Proyecto
+
+### 1. Requisitos Previos
+
+- **Node.js:** v20 o superior.
+- **Backend Activo:** El motor de MedusaJS debe estar corriendo (generalmente en el puerto 9000).
+- **pnpm:** Instalado globalmente.
+
+### 2. Instalación
+
+Clona el repositorio y ejecuta:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Variables de Entorno
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Copia el archivo `.env.local` y configura la URL de tu backend:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+NEXT_PUBLIC_MEDUSA_BACKEND_URL=http://localhost:9000
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🧑‍💻 Desarrollo
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Para iniciar el servidor de desarrollo:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm run dev
+```
 
-## Deploy on Vercel
+La aplicación estará disponible en `http://localhost:3000`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Scripts Disponibles
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `pnpm run build`: Genera la versión optimizada para producción.
+- `pnpm run start`: Inicia la aplicación compilada.
+- `pnpm run lint`: Ejecuta el linter para mantener la calidad del código.
 
-# Sergio gay
+---
+
+## 📂 Estructura del Directorio
+
+- `/src/app`: Rutas y páginas de la aplicación (App Router).
+- `/src/components`: Componentes UI reutilizables y secciones de la página.
+- `/src/services`: Lógica de comunicación con la API de Medusa.
+- `/src/context`: Proveedores de contexto global (ej. Carrito, Autenticación).
+- `/src/lib`: Utilidades y configuraciones externas.
+
+---
+
+## 🎨 Filosofía de Diseño
+
+NariñoTex se enfoca en una experiencia visual limpia y elegante, utilizando degradados sutiles, tipografía moderna y transiciones suaves para guiar al usuario a través del proceso de compra.
+
+---
+
+<p align="center">
+  Hecho con ❤️ para NariñoTex
+</p>

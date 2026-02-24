@@ -1,14 +1,22 @@
-const MEDUSA_BACKEND_URL =
-  process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000";
-
-const MEDUSA_PUBLISHABLE_KEY =
-  process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "";
+const MEDUSA_BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000";
+const MEDUSA_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY || "";
 
 export async function medusaFetch<T>(
   path: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  query?: Record<string, string | string[]>,
 ): Promise<T> {
-  const url = `${MEDUSA_BACKEND_URL}${path}`;
+  const url = new URL(path, MEDUSA_BACKEND_URL)
+
+  if(query){
+    Object.entries(query).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach(v => url.searchParams.append(key, v))
+      } else {
+        url.searchParams.append(key, value)
+      }
+    })
+  }
 
   const token =
     typeof window !== "undefined"
