@@ -68,3 +68,31 @@ export async function deleteCustomerAddress(addressId: string) {
         method: "DELETE",
     });
 }
+
+/* ============================= */
+/* UPDATE ADDRESS */
+/* ============================= */
+
+export async function updateCustomerAddress(
+  addressId: string,
+  data: {
+    address_name?: string;
+    first_name?: string;
+    last_name?: string;
+    address_1?: string;
+    city?: string;
+    country_code?: string;
+    province?: string;
+    postal_code?: string;
+    phone?: string;
+    company?: string;
+  }
+) {
+  return medusaFetch(
+    `/store/customers/me/addresses/${addressId}`,
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    }
+  );
+}

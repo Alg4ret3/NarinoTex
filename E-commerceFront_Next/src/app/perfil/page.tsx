@@ -9,12 +9,15 @@ import { useUser } from '@/context/UserContext';
 import { User, Phone, MapPin, Plus, X, Check } from 'lucide-react';
 import { withAuth } from '@/components/hoc/withAuth';
 
+import type { Address } from '@/context/UserContext';
+
 function ProfilePage() {
-  const { user, updateProfile, createAddress, deleteAddress, isLoading } = useUser();
+  const { user, updateProfile, createAddress, deleteAddress, updateAddress, isLoading } = useUser();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isAddingAddress, setIsAddingAddress] = useState(false);
   const [showSuccessTick, setShowSuccessTick] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
 
   // Profile Form State
   const [profileForm, setProfileForm] = useState({
@@ -35,6 +38,22 @@ function ProfilePage() {
     postalCode: '',
     phone: user?.phone || '',
   });
+
+  const startEditingAddress = (address: Address) => {
+    setEditingAddressId(address.id);
+    setAddressForm({
+      addressName: address.label,
+      firstName: address.firstName || '',
+      lastName: address.lastName || '',
+      street: address.street,
+      city: address.city,
+      country: address.country,
+      province: address.province || '',
+      postalCode: address.postalCode || '',
+      phone: address.phone || '',
+    });
+    setIsAddingAddress(true);
+  };
 
   const [addressError, setAddressError] = useState<string | null>(null);
 
@@ -81,8 +100,15 @@ function ProfilePage() {
     e.preventDefault();
     setAddressError(null);
     try {
-      await createAddress(addressForm);
+      if (editingAddressId) {
+        await updateAddress(editingAddressId, addressForm);
+      } else {
+        await createAddress(addressForm);
+      }
+
       setIsAddingAddress(false);
+      setEditingAddressId(null);
+
       setAddressForm({
         addressName: '',
         firstName: user.firstName,
@@ -452,12 +478,21 @@ function ProfilePage() {
                           {address.label}
                         </Typography>
 
-                        <button
-                          onClick={() => handleDeleteAddress(address.id)}
-                          className="text-[9px] uppercase tracking-widest text-neutral-500 hover:text-red-500 transition-colors cursor-pointer"
-                        >
-                          Eliminar
-                        </button>
+                        <div className="flex items-center gap-4">
+                          <button
+                            onClick={() => startEditingAddress(address)}
+                            className="text-[9px] uppercase tracking-widest text-neutral-500 hover:text-primary transition-colors cursor-pointer"
+                          >
+                            Editar
+                          </button>
+
+                          <button
+                            onClick={() => handleDeleteAddress(address.id)}
+                            className="text-[9px] uppercase tracking-widest text-neutral-500 hover:text-red-500 transition-colors cursor-pointer"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
                       </div>
                       <div className="flex items-start gap-4 pt-1">
                         <MapPin size={16} strokeWidth={1} className="mt-0.5 text-[#D4AF37] shrink-0" />

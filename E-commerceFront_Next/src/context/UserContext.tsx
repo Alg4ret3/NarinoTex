@@ -9,6 +9,7 @@ import {
   createCustomerAddress,
   listCustomerAddresses,
   deleteCustomerAddress,
+  updateCustomerAddress,
   updateCustomer as updateCustomerService,
   sendOtp as sendOtpService,
   verifyOtp as verifyOtpService,
@@ -64,6 +65,10 @@ interface UserContextType {
   createAddress: (data: CreateAddressInput) => Promise<void>;
   listAddresses: () => Promise<void>;
   deleteAddress: (addressId: string) => Promise<void>;
+  updateAddress: (
+    id: string,
+    data: CreateAddressInput
+  ) => Promise<void>;
 }
 
 interface CreateAddressInput {
@@ -281,6 +286,37 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateAddress = async (
+    id: string,
+    data: CreateAddressInput
+  ) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      await updateCustomerAddress(id, {
+        address_name: data.addressName,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        address_1: data.street,
+        city: data.city,
+        country_code: data.country.toLowerCase(),
+        province: data.province,
+        postal_code: data.postalCode,
+        phone: data.phone,
+      });
+
+      // 🔥 sincronizamos
+      await listAddresses();
+
+    } catch (err: any) {
+      setError(err.message || "Error al actualizar dirección");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const clearError = () => {
     setError(null);
   };
@@ -359,6 +395,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       createAddress,
       listAddresses,
       deleteAddress,
+      updateAddress,
       clearError,
       requestPasswordReset,
       resetPassword
