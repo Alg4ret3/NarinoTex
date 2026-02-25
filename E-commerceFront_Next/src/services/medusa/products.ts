@@ -32,6 +32,18 @@ interface MedusaProductsResponse {
   products: MedusaProduct[]
 }
 
+interface MedusaProductResponse {
+  product: any
+}
+
+export async function getProductById(id: string) {
+  const data = await medusaFetch<MedusaProductResponse>(
+    `/store/products/${id}?region_id=reg_01KHMA1TDSX5N1PNXX04K3ZJGC&fields=+metadata,+variants,+variants.prices,+collection`
+  )
+
+  return data.product
+}
+
 export async function getProductsByCollection(collectionId: string) {
   const data = await medusaFetch<MedusaProductsResponse>(
     `/store/products?collection_id[]=${collectionId}&fields=*variants,*variants.prices,*collection`

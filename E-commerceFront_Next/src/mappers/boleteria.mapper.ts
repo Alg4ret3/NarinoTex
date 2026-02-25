@@ -20,7 +20,7 @@ function formatPrice(amount?: number, currency = "COP") {
     style: "currency",
     currency,
     minimumFractionDigits: 0,
-  }).format(amount / 100)
+  }).format(amount)
 }
 
 export function mapMedusaProductToBoleteria(

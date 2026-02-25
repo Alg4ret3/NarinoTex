@@ -164,7 +164,7 @@ export default function BoleteriaPage() {
                       {event.price}
                     </span>
 
-                    <Link href={`/eventos/${event.handle}`}>
+                    <Link href={`/eventos/${event.id}`}>
                       <Button
                         variant={event.isFree ? 'outline' : 'primary'}
                         className="py-3 px-6 text-[9px] uppercase tracking-[0.2em] font-medium gap-2"
