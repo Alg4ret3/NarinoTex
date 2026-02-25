@@ -24,12 +24,28 @@ export default function BoleteriaPage() {
   const [events, setEvents] = useState<BoleteriaCard[]>([])
   const [loading, setLoading] = useState(true)
 
+  const [selectedCategory, setSelectedCategory] = useState('Todos')
+  const [categories, setCategories] = useState<string[]>([])
+
   useEffect(() => {
     async function load() {
       try {
         const products = await getBoleteriaProducts()
         const mapped = products.map(mapMedusaProductToBoleteria)
+
         setEvents(mapped)
+
+        // 🔥 Extraer categorías únicas dinámicamente
+        const uniqueCategories = [
+          'Todos',
+          ...new Set(
+            mapped
+              .flatMap((event) => event.category)
+              .filter(Boolean)
+          ),
+        ]
+
+        setCategories(uniqueCategories)
       } catch (error) {
         console.error('Error loading boletería:', error)
       } finally {
@@ -39,6 +55,15 @@ export default function BoleteriaPage() {
 
     load()
   }, [])
+
+  const filteredEvents =
+  selectedCategory === 'Todos'
+    ? events
+    : events.filter(event =>
+      event.category.some(cat =>
+        cat.toLowerCase() === selectedCategory.toLowerCase()
+      )
+    )
 
   return (
     <main className="min-h-screen bg-background">
@@ -81,16 +106,17 @@ export default function BoleteriaPage() {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-4 mb-16">
-          {intro.filters.map((filter, i) => (
+          {categories.map((category) => (
             <button
-              key={filter}
-              className={`px-6 py-2 text-[10px] uppercase tracking-widest border ${
-                i === 0
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-6 py-2 text-[10px] uppercase tracking-widest border transition-all ${
+                selectedCategory === category
                   ? 'border-primary text-primary'
                   : 'border-border text-neutral-500 hover:border-neutral-400'
-              } transition-all`}
+              }`}
             >
-              {filter}
+              {category}
             </button>
           ))}
         </div>
@@ -105,7 +131,7 @@ export default function BoleteriaPage() {
         {/* Events Grid */}
         {!loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border border border-border overflow-hidden mb-32">
-            {events.map((event) => (
+            {filteredEvents.map((event) => (
               <div
                 key={event.id}
                 className="group bg-card p-8 sm:p-12 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-all duration-700 flex flex-col"

@@ -5,7 +5,7 @@ export interface BoleteriaCard {
   handle: string
   name: string
   image: string
-  category: string
+  category: string[]
   date?: string
   location?: string
   badge?: string
@@ -36,11 +36,11 @@ export function mapMedusaProductToBoleteria(
     handle: product.handle,
     name: product.title,
     image: product.thumbnail || "/placeholder.jpg",
-    category: product.collection?.title || "Evento",
     date: product.metadata?.date,
     location: product.metadata?.location,
     badge: product.metadata?.badge,
     price: formatPrice(amount, firstPrice?.currency_code?.toUpperCase()),
     isFree: !amount || amount === 0,
+    category: product.categories?.map(c => c.name) || []
   }
 }

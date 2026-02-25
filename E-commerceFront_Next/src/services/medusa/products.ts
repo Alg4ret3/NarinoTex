@@ -26,6 +26,10 @@ export interface MedusaProduct {
   variants: MedusaVariant[]
   collection?: MedusaCollection
   metadata?: Record<string, any>
+  categories?: {
+    id: string
+    name: string
+  }[]
 }
 
 interface MedusaProductsResponse {
@@ -46,7 +50,7 @@ export async function getProductById(id: string) {
 
 export async function getProductsByCollection(collectionId: string) {
   const data = await medusaFetch<MedusaProductsResponse>(
-    `/store/products?collection_id[]=${collectionId}&fields=*variants,*variants.prices,*collection`
+    `/store/products?collection_id[]=${collectionId}&fields=*variants,*variants.prices,*collection,*categories`
   )
 
   return data.products
