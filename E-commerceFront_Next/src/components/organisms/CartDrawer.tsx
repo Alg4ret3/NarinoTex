@@ -133,7 +133,7 @@ export const CartDrawer: React.FC = () => {
                               </div>
                             )}
                             
-                            <Typography variant="body" className="text-[11px] font-serif italic text-neutral-500">{item.price}</Typography>
+                            <Typography variant="body" className="text-[11px] font-serif italic text-neutral-500">${item.price.toLocaleString('es-CO')}</Typography>
                           </div>
                           
                           <div className="flex items-center justify-between mt-4">

@@ -72,13 +72,6 @@ export default function EventClientView({ product }: Props) {
                         {product.title}
                     </Typography>
 
-                    <Button
-                        onClick={() => setIsModalOpen(true)}
-                        size="lg"
-                        className="px-12 py-7 bg-primary text-background"
-                    >
-                        Comprar Boletas
-                    </Button>
                 </div>
             </section>
 
@@ -103,7 +96,7 @@ export default function EventClientView({ product }: Props) {
                             <Typography variant="small" className="mb-8 block text-primary uppercase text-[10px] font-bold">
                                 Sobre el Evento
                             </Typography>
-                            <Typography variant="body" className="text-lg leading-relaxed">
+                            <Typography variant="body" className="text-lg leading-relaxed whitespace-pre-line">
                                 {product.description}
                             </Typography>
                         </div>
@@ -145,7 +138,7 @@ export default function EventClientView({ product }: Props) {
                                 Plano del Recinto
                             </Typography>
 
-                            <div className="relative aspect-square border border-border overflow-hidden">
+                             <div className="relative aspect-square border border-border overflow-hidden">
                                 <Image
                                     src={metadata.plan_image}
                                     alt="Plano"
@@ -153,6 +146,14 @@ export default function EventClientView({ product }: Props) {
                                     className="object-cover"
                                 />
                             </div>
+
+                            <Button
+                                onClick={() => setIsModalOpen(true)}
+                                size="lg"
+                                className="w-full mt-4 px-12 py-7 bg-primary text-background"
+                            >
+                                Comprar Boletas
+                            </Button>
                         </div>
                     )}
                 </div>
@@ -162,13 +163,7 @@ export default function EventClientView({ product }: Props) {
             <TicketSelectionModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                event={{
-                    id: product.id,
-                    name: product.title,
-                    image: firstImage,
-                    category: product.collection?.title,
-                    price: product.variants[0]?.calculated_price?.calculated_amount
-                }}
+                product={product}
             />
             <Footer />
         </main>

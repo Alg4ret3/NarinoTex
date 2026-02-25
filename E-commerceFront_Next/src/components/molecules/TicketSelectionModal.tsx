@@ -10,44 +10,40 @@ import { useCart } from '@/context/CartContext';
 interface TicketSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  event: {
-    id: string;
-    name: string;
-    price: string;
-    image: string;
-    category: string;
-  };
+  product: any;
 }
 
 export const TicketSelectionModal: React.FC<TicketSelectionModalProps> = ({ 
   isOpen, 
   onClose, 
-  event 
+  product 
 }) => {
   const [quantity, setQuantity] = useState(1);
-  const [selectedVariant, setSelectedVariant] = useState('General');
   const { addToCart } = useCart();
+  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(
+    product.variants?.[0]?.id || null
+  )
 
-  const variants = [
-    { name: 'General', price: 80000, description: 'Acceso a zona posterior y platea' },
-    { name: 'VIP', price: 150000, description: 'Ubicación preferencial cerca a pasarela' },
-    { name: 'Front Row', price: 250000, description: 'Primera fila, experiencia exclusiva' }
-  ];
+  const variants = product.variants || []
 
-  const currentVariant = variants.find(v => v.name === selectedVariant) || variants[0];
-  const totalPrice = currentVariant.price * quantity;
+  const selectedVariant = variants.find(
+    (v: any) => v.id === selectedVariantId
+  )
+
+  const unitPrice = selectedVariant?.calculated_price?.calculated_amount || 0
+  const totalPrice = unitPrice * quantity
 
   const handleAddToCart = () => {
     addToCart({
-      id: `${event.id}-${selectedVariant.toLowerCase().replace(' ', '-')}`,
-      name: `${event.name} - ${selectedVariant}`,
-      price: `$${currentVariant.price.toLocaleString('es-CO')}`,
-      image: event.image,
+      id: selectedVariant.id,
+      name: `${product.title} - ${selectedVariant.title}`,
+      price: unitPrice,
+      image: product.thumbnail || product.images?.[0].url,
       quantity: quantity,
       type: 'ticket',
       metadata: {
-        category: event.category,
-        variant: selectedVariant
+        category: product.collection.title,
+        variant: selectedVariant.title
       }
     });
     onClose();
@@ -93,18 +89,23 @@ export const TicketSelectionModal: React.FC<TicketSelectionModalProps> = ({
                 Escenario / Pasarela
               </div>
               
+              {/* Empresarial */}
+              <div className={`w-3/4 h-10 sm:h-12 border-2 flex items-center justify-center mb-2 transition-all duration-500 rounded-sm ${selectedVariant.title === 'Empresarial' ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]' : 'bg-background/20 border-border/20 opacity-30 text-transparent'}`}>
+                 <span className="text-[7px] sm:text-[8px] uppercase tracking-tighter font-bold">Zona Empresarial</span>
+              </div>
+
               {/* Front Row Area */}
-              <div className={`w-3/4 h-10 sm:h-12 border-2 flex items-center justify-center mb-2 transition-all duration-500 rounded-sm ${selectedVariant === 'Front Row' ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]' : 'bg-background/20 border-border/20 opacity-30 text-transparent'}`}>
-                 <span className="text-[7px] sm:text-[8px] uppercase tracking-tighter font-bold">Front Row</span>
+              <div className={`w-3/4 h-10 sm:h-12 border-2 flex items-center justify-center mb-2 transition-all duration-500 rounded-sm ${selectedVariant.title === 'Platinum' ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]' : 'bg-background/20 border-border/20 opacity-30 text-transparent'}`}>
+                 <span className="text-[7px] sm:text-[8px] uppercase tracking-tighter font-bold">Zona Platinum</span>
               </div>
 
               {/* VIP Area */}
-              <div className={`w-3/4 h-12 sm:h-16 border-2 flex items-center justify-center mb-2 transition-all duration-500 rounded-sm ${selectedVariant === 'VIP' ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]' : 'bg-background/20 border-border/20 opacity-30 text-transparent'}`}>
+              <div className={`w-3/4 h-12 sm:h-16 border-2 flex items-center justify-center mb-2 transition-all duration-500 rounded-sm ${selectedVariant.title === 'VIP' ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]' : 'bg-background/20 border-border/20 opacity-30 text-transparent'}`}>
                  <span className="text-[7px] sm:text-[8px] uppercase tracking-tighter font-bold">Zona VIP</span>
               </div>
 
               {/* General Area */}
-              <div className={`w-3/4 h-16 sm:h-20 border-2 flex items-center justify-center transition-all duration-500 rounded-sm ${selectedVariant === 'General' ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]' : 'bg-background/20 border-border/20 opacity-30 text-transparent'}`}>
+              <div className={`w-3/4 h-16 sm:h-20 border-2 flex items-center justify-center transition-all duration-500 rounded-sm ${selectedVariant.title === 'General' ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]' : 'bg-background/20 border-border/20 opacity-30 text-transparent'}`}>
                  <span className="text-[7px] sm:text-[8px] uppercase tracking-tighter font-bold">Zona General</span>
               </div>
             </div>
@@ -118,10 +119,10 @@ export const TicketSelectionModal: React.FC<TicketSelectionModalProps> = ({
           <div className="w-full md:w-80 flex flex-col justify-between min-h-0">
             <div>
               <Typography variant="small" className="mb-2 uppercase tracking-[0.3em] text-primary/60 text-[9px]">
-                {event.category}
+                {product.collection.title}
               </Typography>
               <Typography variant="h3" className="mb-4 sm:mb-6 text-lg sm:text-2xl font-serif uppercase tracking-tight">
-                {event.name}
+                {product.title}
               </Typography>
 
               <div className="flex flex-col gap-4 mb-6 sm:mb-8">
@@ -129,28 +130,34 @@ export const TicketSelectionModal: React.FC<TicketSelectionModalProps> = ({
                   Tipo de Ubicación
                 </Typography>
                 <div className="flex flex-col gap-2">
-                  {variants.map((v) => (
-                    <button
-                      key={v.name}
-                      onClick={() => setSelectedVariant(v.name)}
-                      className={`p-3 sm:p-4 border text-left transition-all duration-300 relative overflow-hidden group rounded-sm
-                        ${selectedVariant === v.name 
-                          ? 'border-primary bg-primary/5' 
-                          : 'border-border/50 hover:border-primary/50 bg-muted/20'}`}
-                    >
-                      <div className="flex justify-between items-center mb-1">
-                        <span className={`text-[9px] sm:text-[10px] uppercase tracking-widest font-bold ${selectedVariant === v.name ? 'text-primary' : 'text-foreground'}`}>
-                          {v.name}
-                        </span>
-                        <span className="text-xs font-sans font-medium">
-                          ${v.price.toLocaleString('es-CO')}
-                        </span>
-                      </div>
-                      <p className="text-[9px] text-neutral-500 font-light lowercase tracking-wider line-clamp-1">
-                        {v.description}
-                      </p>
-                    </button>
-                  ))}
+                  {variants.map((variant: any) => {
+                    const price = variant.calculated_price?.calculated_amount || 0
+
+                    return (
+                      <button
+                        key={variant.id}
+                        onClick={() => setSelectedVariantId(variant.id)}
+                        className={`p-4 border text-left transition-all duration-300 rounded-sm
+                          ${
+                            selectedVariantId === variant.id
+                              ? 'border-primary bg-primary/5'
+                              : 'border-border/50 hover:border-primary/50 bg-muted/20'
+                          }`}
+                      >
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="uppercase tracking-widest font-bold">
+                            {variant.title}
+                          </span>
+                          <span className="text-sm font-medium">
+                            {new Intl.NumberFormat('es-CO', {
+                              style: 'currency',
+                              currency: 'COP'
+                            }).format(price)}
+                          </span>
+                        </div>
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
 

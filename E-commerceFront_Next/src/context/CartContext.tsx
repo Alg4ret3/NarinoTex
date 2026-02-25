@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 export interface CartItem {
   id: string;
   name: string;
-  price: string;
+  price: number;
   image: string;
   quantity: number;
   size?: string;
@@ -104,8 +104,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   
   const totalPrice = cart.reduce((acc, item) => {
-    const priceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
-    return acc + (priceNum * item.quantity);
+    return acc + (item.price * item.quantity);
   }, 0);
 
   return (
